@@ -276,22 +276,8 @@ CREATE POLICY "Anon upload evidence"
 <!-- Supabase JS Client v2 (CDN) -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-// ── PASSWORD UTILS (SHA-256 hash with fallback for local file:// access) ──────
-async function hashPw(pw) {
-  try {
-    if (!window.crypto || !window.crypto.subtle) throw new Error('No crypto.subtle');
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
-    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-  } catch(e) {
-    // Fallback for non-HTTPS/local file context
-    let hash = 0;
-    for (let i = 0; i < pw.length; i++) {
-      hash = (hash << 5) - hash + pw.charCodeAt(i);
-      hash |= 0; // Convert to 32bit integer
-    }
-    return 'local_' + hash;
-  }
-}
+// ── ADMIN PASSWORD (hardcoded — change here to update) ─────────
+const ADMIN_PASSWORD = 'ROROTUCK123';
 // ── TOAST NOTIFICATION ─────────────────────────────────────────
 let toastTimer;
 function showToast(msg, type = '') {
@@ -303,7 +289,7 @@ function showToast(msg, type = '') {
 }
 // ── STATE ──────────────────────────────────────────────────────
 let allSubmissions = [];
-let supabase = null;
+let sbClient = null; // Supabase client instance
 function show(id) {
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -313,49 +299,29 @@ function initSupabase() {
   const url = localStorage.getItem('sv_supa_url');
   const key = localStorage.getItem('sv_supa_key');
   if (url && key) {
-    supabase = window.supabase.createClient(url, key);
+    sbClient = window.supabase.createClient(url, key);
     return true;
   }
   return false;
 }
 // ── LOGIN ──────────────────────────────────────────────────────
-document.getElementById('login-btn').addEventListener('click', async () => {
-  const pw = document.getElementById('pw-input').value;
+document.getElementById('login-btn').addEventListener('click', () => {
+  const pw = document.getElementById('pw-input').value.trim();
+  const errEl = document.getElementById('login-err');
   if (!pw) return;
-  const stored = localStorage.getItem('sv_pw_hash');
-  
-  if (!stored) {
-    // If no password is set in localStorage, use ROROTUCK123 as the default fallback
-    if (pw === 'ROROTUCK123') {
-      document.getElementById('login-err').style.display = 'none';
-      afterLogin();
-      return;
-    } else {
-      document.getElementById('login-err').style.display = 'block';
-      document.getElementById('login-err').textContent = 'Incorrect password. (Default password is ROROTUCK123)';
-      return;
-    }
+  if (pw === ADMIN_PASSWORD) {
+    errEl.style.display = 'none';
+    afterLogin();
+  } else {
+    errEl.style.display = 'block';
+    errEl.textContent = 'Incorrect password. Try again.';
   }
-  
-  const hash = await hashPw(pw);
-  // Also explicitly allow ROROTUCK123 as a bypass just in case
-  if (hash !== stored && pw !== 'ROROTUCK123') {
-    document.getElementById('login-err').style.display = 'block';
-    document.getElementById('login-err').textContent = 'Incorrect password. Try again.';
-    return;
-  }
-  document.getElementById('login-err').style.display = 'none';
-  afterLogin();
 });
-document.getElementById('setpw-btn').addEventListener('click', async () => {
-  const pw = document.getElementById('pw-new').value;
-  if (!pw || pw.length < 6) { alert('Password must be at least 6 characters.'); return; }
-  localStorage.setItem('sv_pw_hash', await hashPw(pw));
-  document.getElementById('pw-new').value = '';
-  showToast('✅ Password set! You can now sign in.', 'success');
+document.getElementById('setpw-btn').addEventListener('click', () => {
+  showToast('Password change disabled in this version.', '');
 });
 document.getElementById('pw-input').addEventListener('keydown', e => {
-  if(e.key==='Enter') document.getElementById('login-btn').click();
+  if (e.key === 'Enter') document.getElementById('login-btn').click();
 });
 function afterLogin() {
   if (initSupabase()) {
@@ -406,7 +372,7 @@ document.getElementById('setup-btn').addEventListener('click', async () => {
 async function loadSubmissions() {
   const area = document.getElementById('submissions-area');
   area.innerHTML = `<div class="state-box"><div class="spinner-lg"></div><div class="state-title">Loading submissions…</div></div>`;
-  if (!supabase) {
+  if (!sbClient) {
     area.innerHTML = `<div class="state-box">
       <div class="state-title" style="color:var(--red)">Not connected</div>
       <div class="state-sub">Supabase client not initialised. Go to Setup.</div>
@@ -414,7 +380,7 @@ async function loadSubmissions() {
     return;
   }
   try {
-    const { data, error } = await supabase
+    const { data, error } = await sbClient
       .from('submissions')
       .select('*')
       .order('created_at', { ascending: false })
@@ -512,9 +478,9 @@ function updateStats(subs) {
 }
 // ── FLAG (persisted to Supabase) ─────────────────────────────
 async function toggleFlag(id, newState) {
-  if (!supabase) return;
+  if (!sbClient) return;
   try {
-    const { error } = await supabase
+    const { error } = await sbClient
       .from('submissions')
       .update({ flagged: newState })
       .eq('id', id);
@@ -532,9 +498,9 @@ async function toggleFlag(id, newState) {
 // ── DELETE SUBMISSION ────────────────────────────────────────
 async function deleteSubmission(id) {
   if (!confirm('Delete this submission permanently? This cannot be undone.')) return;
-  if (!supabase) return;
+  if (!sbClient) return;
   try {
-    const { error } = await supabase
+    const { error } = await sbClient
       .from('submissions')
       .delete()
       .eq('id', id);
