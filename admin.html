@@ -15,9 +15,11 @@
   }
   body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;}
   input,button,select{font-family:'Inter',sans-serif;}
+
   /* ── SCREENS ── */
   .screen{display:none;min-height:100vh;}
   .screen.active{display:flex;}
+
   /* ── LOGIN SCREEN ── */
   #screen-login{align-items:center;justify-content:center;padding:20px;}
   .login-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);width:100%;max-width:380px;overflow:hidden;}
@@ -35,6 +37,7 @@
   .btn-primary:hover{opacity:0.85;}
   .btn-primary:disabled{opacity:0.4;cursor:not-allowed;}
   .login-footer{padding:14px 24px;border-top:1px solid var(--border);font-size:0.72rem;color:var(--muted);text-align:center;}
+
   /* ── SETUP SCREEN ── */
   #screen-setup{flex-direction:column;align-items:center;justify-content:center;padding:20px;}
   .setup-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);width:100%;max-width:520px;}
@@ -49,6 +52,7 @@
   .setup-note code{background:var(--bg);padding:1px 5px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--green);}
   .setup-sql{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--green);line-height:1.7;overflow-x:auto;white-space:pre;max-height:260px;overflow-y:auto;}
   .setup-sql-toggle{font-size:0.78rem;color:var(--accent);cursor:pointer;border:none;background:none;font-family:'Inter',sans-serif;font-weight:600;padding:0;text-decoration:underline;}
+
   /* ── ADMIN SHELL ── */
   #screen-admin{flex-direction:column;}
   .admin-topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
@@ -62,18 +66,22 @@
   .btn-logout{background:transparent;color:var(--muted);border:1px solid var(--border);}
   .btn-export{background:rgba(63,185,80,0.15);color:var(--green);border:1px solid rgba(63,185,80,0.3);}
   .btn-settings{background:rgba(163,113,247,0.12);color:var(--purple);border:1px solid rgba(163,113,247,0.25);}
+
   /* ── STATS BAR ── */
   .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-bottom:1px solid var(--border);}
   .stat-cell{background:var(--surface);padding:14px 20px;}
   .stat-val{font-size:1.4rem;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text);}
   .stat-label{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px;}
+
   /* ── FILTERS ── */
   .filters-bar{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface2);}
   .filter-input{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:7px 11px;color:var(--text);font-size:0.8rem;outline:none;min-width:180px;}
   .filter-input:focus{border-color:var(--accent);}
   .filter-count{font-size:0.76rem;color:var(--muted);margin-left:auto;}
+
   /* ── SUBMISSIONS GRID ── */
   .submissions-area{padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;}
+
   /* ── SUBMISSION CARD ── */
   .sub-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;}
   .sub-photo{width:100%;height:180px;object-fit:cover;background:var(--bg);display:block;cursor:zoom-in;}
@@ -92,6 +100,7 @@
   .btn-delete{padding:7px 10px;background:rgba(210,153,34,0.1);color:var(--yellow);border:1px solid rgba(210,153,34,0.25);border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;transition:background 0.15s;}
   .btn-delete:hover{background:rgba(210,153,34,0.2);}
   .flagged-badge{display:inline-block;background:rgba(248,81,73,0.15);color:var(--red);border:1px solid rgba(248,81,73,0.3);border-radius:4px;font-size:0.65rem;font-weight:700;padding:1px 6px;margin-left:6px;text-transform:uppercase;}
+
   /* ── EMPTY / LOADING / ERROR STATES ── */
   .state-box{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted);}
   .state-box svg{margin-bottom:12px;opacity:0.4;}
@@ -99,17 +108,20 @@
   .state-sub{font-size:0.8rem;line-height:1.6;}
   .spinner-lg{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 14px;}
   @keyframes spin{to{transform:rotate(360deg);}}
+
   /* ── LIGHTBOX ── */
   .lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:999;display:none;align-items:center;justify-content:center;padding:20px;cursor:zoom-out;}
   .lightbox.open{display:flex;}
   .lightbox img{max-width:100%;max-height:90vh;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,0.6);}
   .lightbox-close{position:absolute;top:16px;right:20px;color:#fff;font-size:1.8rem;cursor:pointer;opacity:0.7;line-height:1;}
   .lightbox-close:hover{opacity:1;}
+
   /* ── TOAST NOTIFICATION ── */
   .toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 18px;font-size:0.82rem;color:var(--text);z-index:1000;opacity:0;transform:translateY(12px);transition:all 0.3s ease;pointer-events:none;max-width:340px;box-shadow:0 8px 30px rgba(0,0,0,0.4);}
   .toast.show{opacity:1;transform:translateY(0);pointer-events:auto;}
   .toast.success{border-color:rgba(63,185,80,0.4);}
   .toast.error{border-color:rgba(248,81,73,0.4);}
+
   @media(max-width:600px){
     .stats-bar{grid-template-columns:repeat(2,1fr);}
     .admin-topbar{flex-wrap:wrap;gap:8px;}
@@ -118,6 +130,7 @@
 </style>
 </head>
 <body>
+
 <!-- ══════════════════════════════════════════════════════════════
      SCREEN 1 — LOGIN
 ══════════════════════════════════════════════════════════════ -->
@@ -149,6 +162,7 @@
     <div class="login-footer">SecureVerify™ Admin · Evidence Management System</div>
   </div>
 </div>
+
 <!-- ══════════════════════════════════════════════════════════════
      SCREEN 2 — SUPABASE SETUP
 ══════════════════════════════════════════════════════════════ -->
@@ -168,12 +182,13 @@
           <li>Paste both below — they are saved only in your browser.</li>
         </ol>
       </div>
+
       <button class="setup-sql-toggle" id="toggle-sql" onclick="document.getElementById('sql-block').style.display=document.getElementById('sql-block').style.display==='none'?'block':'none'; this.textContent=document.getElementById('sql-block').style.display==='none'?'▶ Show required SQL setup':'▼ Hide SQL setup'">▶ Show required SQL setup</button>
       <div id="sql-block" style="display:none;">
         <div class="setup-note" style="margin-bottom:10px;">
           Run this SQL in your Supabase <strong>SQL Editor</strong> (Dashboard → SQL Editor → New Query) to create the submissions table and storage bucket:
         </div>
-        <div class="setup-sql">-- Create the submissions table
+        <div class="setup-sql">-- 1. Create submissions table
 CREATE TABLE IF NOT EXISTS submissions (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   ref_id TEXT,
@@ -185,26 +200,34 @@ CREATE TABLE IF NOT EXISTS submissions (
   ip_address TEXT,
   flagged BOOLEAN DEFAULT false,
   notes TEXT,
+  exif_data JSONB, -- Added metadata column
   submitted_at TIMESTAMPTZ DEFAULT now(),
   created_at TIMESTAMPTZ DEFAULT now()
 );
--- Enable Row Level Security
+
+-- 2. Enable Row Level Security
 ALTER TABLE submissions ENABLE ROW LEVEL SECURITY;
--- Portal (anon key) can ONLY insert — never read/update/delete
+
+-- 3. Recreate policy for anon inserts
+DROP POLICY IF EXISTS "Anon insert only" ON submissions;
 CREATE POLICY "Anon insert only"
   ON submissions FOR INSERT
   TO anon
   WITH CHECK (true);
--- Create storage bucket for evidence photos
+
+-- 4. Create storage bucket for evidence photos
 INSERT INTO storage.buckets (id, name, public)
 VALUES ('evidence', 'evidence', true)
 ON CONFLICT (id) DO NOTHING;
--- Allow public read access to evidence bucket (so admin can view photos)
+
+-- 5. Recreate storage policies
+DROP POLICY IF EXISTS "Public read evidence" ON storage.objects;
 CREATE POLICY "Public read evidence"
   ON storage.objects FOR SELECT
   TO public
   USING (bucket_id = 'evidence');
--- Allow anon uploads to evidence bucket (portal photo uploads)
+
+DROP POLICY IF EXISTS "Anon upload evidence" ON storage.objects;
 CREATE POLICY "Anon upload evidence"
   ON storage.objects FOR INSERT
   TO anon
@@ -213,6 +236,7 @@ CREATE POLICY "Anon upload evidence"
           <strong>⚠️ Security note:</strong> The portal page uses your <code>anon</code> key (public, INSERT-only). This admin page uses your <code>service_role</code> key (secret, full access). The service_role key is stored only in your browser and never shared.
         </div>
       </div>
+
       <div>
         <div class="field-label">Supabase Project URL</div>
         <input class="field-input" type="text" id="supa-url-input" placeholder="https://xxxxxxxxxxxxx.supabase.co"/>
@@ -227,6 +251,7 @@ CREATE POLICY "Anon upload evidence"
     </div>
   </div>
 </div>
+
 <!-- ══════════════════════════════════════════════════════════════
      SCREEN 3 — ADMIN DASHBOARD
 ══════════════════════════════════════════════════════════════ -->
@@ -244,12 +269,14 @@ CREATE POLICY "Anon upload evidence"
       <button class="btn-sm btn-logout" id="logout-btn">Sign Out</button>
     </div>
   </div>
+
   <div class="stats-bar">
     <div class="stat-cell"><div class="stat-val" id="stat-total">—</div><div class="stat-label">Total Submissions</div></div>
     <div class="stat-cell"><div class="stat-val" id="stat-today">—</div><div class="stat-label">Today</div></div>
     <div class="stat-cell"><div class="stat-val" id="stat-flagged">—</div><div class="stat-label">Flagged</div></div>
     <div class="stat-cell"><div class="stat-val" id="stat-refs">—</div><div class="stat-label">Unique Sessions</div></div>
   </div>
+
   <div class="filters-bar">
     <input class="filter-input" type="text" id="filter-search" placeholder="🔍  Search by ref, task, attempt…"/>
     <select class="filter-input" id="filter-flagged" style="width:auto;">
@@ -259,6 +286,7 @@ CREATE POLICY "Anon upload evidence"
     </select>
     <span class="filter-count" id="filter-count"></span>
   </div>
+
   <div class="submissions-area" id="submissions-area">
     <div class="state-box">
       <div class="spinner-lg"></div>
@@ -266,18 +294,23 @@ CREATE POLICY "Anon upload evidence"
     </div>
   </div>
 </div>
+
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
   <span class="lightbox-close" onclick="closeLightbox()">×</span>
   <img id="lightbox-img" src="" alt="Evidence photo"/>
 </div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
+
 <!-- Supabase JS Client v2 (CDN) -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
 <script>
 // ── ADMIN PASSWORD (hardcoded — change here to update) ─────────
 const ADMIN_PASSWORD = 'ROROTUCK123';
+
 // ── TOAST NOTIFICATION ─────────────────────────────────────────
 let toastTimer;
 function showToast(msg, type = '') {
@@ -287,13 +320,16 @@ function showToast(msg, type = '') {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.classList.remove('show'), 3500);
 }
+
 // ── STATE ──────────────────────────────────────────────────────
 let allSubmissions = [];
 let sbClient = null; // Supabase client instance
+
 function show(id) {
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
+
 // ── SUPABASE CLIENT INIT ──────────────────────────────────────
 function initSupabase() {
   const url = localStorage.getItem('sv_supa_url');
@@ -304,6 +340,7 @@ function initSupabase() {
   }
   return false;
 }
+
 // ── LOGIN ──────────────────────────────────────────────────────
 document.getElementById('login-btn').addEventListener('click', () => {
   const pw = document.getElementById('pw-input').value.trim();
@@ -317,12 +354,15 @@ document.getElementById('login-btn').addEventListener('click', () => {
     errEl.textContent = 'Incorrect password. Try again.';
   }
 });
+
 document.getElementById('setpw-btn').addEventListener('click', () => {
   showToast('Password change disabled in this version.', '');
 });
+
 document.getElementById('pw-input').addEventListener('keydown', e => {
   if (e.key === 'Enter') document.getElementById('login-btn').click();
 });
+
 function afterLogin() {
   if (initSupabase()) {
     show('screen-admin');
@@ -331,19 +371,23 @@ function afterLogin() {
     show('screen-setup');
   }
 }
+
 // ── SETUP ──────────────────────────────────────────────────────
 document.getElementById('setup-btn').addEventListener('click', async () => {
   const url = document.getElementById('supa-url-input').value.trim();
   const key = document.getElementById('supa-key-input').value.trim();
   if (!url || !key) { alert('Both fields are required.'); return; }
+
   const btn = document.getElementById('setup-btn');
   btn.disabled = true;
   btn.textContent = 'Connecting…';
   document.getElementById('setup-err').style.display = 'none';
+
   try {
     // Test connection by querying the submissions table
     const testClient = window.supabase.createClient(url, key);
     const { data, error } = await testClient.from('submissions').select('id').limit(1);
+
     if (error) {
       // If the table doesn't exist yet, show a helpful message
       if (error.message.includes('does not exist') || error.code === '42P01') {
@@ -353,6 +397,7 @@ document.getElementById('setup-btn').addEventListener('click', async () => {
       }
       throw error;
     }
+
     // Success — save credentials
     localStorage.setItem('sv_supa_url', url);
     localStorage.setItem('sv_supa_key', key);
@@ -368,10 +413,12 @@ document.getElementById('setup-btn').addEventListener('click', async () => {
     btn.textContent = 'Connect & Open Admin';
   }
 });
+
 // ── LOAD SUBMISSIONS ──────────────────────────────────────────
 async function loadSubmissions() {
   const area = document.getElementById('submissions-area');
   area.innerHTML = `<div class="state-box"><div class="spinner-lg"></div><div class="state-title">Loading submissions…</div></div>`;
+
   if (!sbClient) {
     area.innerHTML = `<div class="state-box">
       <div class="state-title" style="color:var(--red)">Not connected</div>
@@ -379,16 +426,20 @@ async function loadSubmissions() {
     </div>`;
     return;
   }
+
   try {
     const { data, error } = await sbClient
       .from('submissions')
       .select('*')
       .order('created_at', { ascending: false })
       .limit(500);
+
     if (error) throw error;
+
     allSubmissions = data || [];
     renderSubmissions(allSubmissions);
     updateStats(allSubmissions);
+
     if (allSubmissions.length === 0) {
       area.innerHTML = `<div class="state-box">
         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
@@ -403,11 +454,13 @@ async function loadSubmissions() {
     </div>`;
   }
 }
+
 // ── RENDER ────────────────────────────────────────────────────
 function renderSubmissions(subs) {
   const area = document.getElementById('submissions-area');
   const search = document.getElementById('filter-search').value.toLowerCase();
   const flagFilter = document.getElementById('filter-flagged').value;
+
   let filtered = subs.filter(s => {
     const text = [s.ref_id, s.task, String(s.attempt), s.submitted_at, s.notes].join(' ').toLowerCase();
     if (search && !text.includes(search)) return false;
@@ -415,7 +468,9 @@ function renderSubmissions(subs) {
     if (flagFilter === 'unflagged' && s.flagged) return false;
     return true;
   });
+
   document.getElementById('filter-count').textContent = `Showing ${filtered.length} of ${subs.length}`;
+
   if (!filtered.length) {
     area.innerHTML = `<div class="state-box">
       <div class="state-title">No matching submissions</div>
@@ -423,11 +478,13 @@ function renderSubmissions(subs) {
     </div>`;
     return;
   }
+
   area.innerHTML = filtered.map(s => {
     const photoUrl = s.photo_url || null;
     const date = s.submitted_at
       ? new Date(s.submitted_at).toLocaleString()
       : new Date(s.created_at).toLocaleString();
+
     return `<div class="sub-card" id="card-${s.id}">
       ${photoUrl
         ? `<img class="sub-photo" src="${escHtml(photoUrl)}" alt="Evidence" onclick="openLightbox('${escAttr(photoUrl)}')" loading="lazy"/>`
@@ -438,11 +495,43 @@ function renderSubmissions(subs) {
         <div class="sub-task">${escHtml((s.task||'Unknown task').substring(0,120))}${(s.task||'').length>120?'…':''}</div>
         <div class="sub-meta">
           <div class="sub-meta-row"><span>Attempt</span><span>#${s.attempt||'?'}</span></div>
-          <div class="sub-meta-row"><span>ToS Agreed</span><span>${s.tos_agreed ? '✅ Yes' : '—'}</span></div>
           <div class="sub-meta-row"><span>Submitted</span><span>${date}</span></div>
           <div class="sub-meta-row"><span>IP Address</span><span>${escHtml(s.ip_address||'—')}</span></div>
-          <div class="sub-meta-row"><span>Device</span><span style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escHtml((s.user_agent||'Unknown').split(' ').slice(0,3).join(' '))}</span></div>
-          ${s.notes ? `<div class="sub-meta-row"><span>Notes</span><span style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escHtml(s.notes)}</span></div>` : ''}
+          <div class="sub-meta-row"><span>User Agent</span><span style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escAttr(s.user_agent || '')}">${escHtml((s.user_agent||'Unknown').split(' ').slice(0,3).join(' '))}</span></div>
+          
+          <!-- EXIF DATA RENDERING -->
+          ${s.exif_data ? `
+            <div style="border-top: 1px dashed var(--border); margin-top: 6px; padding-top: 6px; font-size: 0.68rem; color: var(--green);">
+              ${s.exif_data.Make || s.exif_data.Model ? `
+                <div class="sub-meta-row">
+                  <span>Camera</span>
+                  <span>${escHtml(s.exif_data.Make || '')} ${escHtml(s.exif_data.Model || '')}</span>
+                </div>
+              ` : ''}
+              ${s.exif_data.DateTimeOriginal ? `
+                <div class="sub-meta-row">
+                  <span>Photo Date</span>
+                  <span>${escHtml(s.exif_data.DateTimeOriginal)}</span>
+                </div>
+              ` : ''}
+              ${s.exif_data.Software ? `
+                <div class="sub-meta-row">
+                  <span>Software</span>
+                  <span style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escHtml(s.exif_data.Software)}</span>
+                </div>
+              ` : ''}
+              ${(s.exif_data.decimalLatitude && s.exif_data.decimalLongitude) ? `
+                <div class="sub-meta-row" style="margin-top:4px;">
+                  <span>GPS Loc</span>
+                  <a href="https://www.google.com/maps/search/?api=1&query=${s.exif_data.decimalLatitude},${s.exif_data.decimalLongitude}" target="_blank" style="color: var(--accent); text-decoration: underline; font-weight: bold;">
+                    📍 View on Maps
+                  </a>
+                </div>
+              ` : ''}
+            </div>
+          ` : '<div style="border-top: 1px dashed var(--border); margin-top: 6px; padding-top: 6px; font-size: 0.68rem; color: var(--muted); text-align:center;">No EXIF data extracted</div>'}
+
+          ${s.notes ? `<div class="sub-meta-row" style="margin-top:4px;"><span>Notes</span><span style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escHtml(s.notes)}</span></div>` : ''}
         </div>
       </div>
       <div class="sub-actions">
@@ -456,6 +545,7 @@ function renderSubmissions(subs) {
     </div>`;
   }).join('');
 }
+
 // ── HTML ESCAPE UTILS ─────────────────────────────────────────
 function escHtml(str) {
   const div = document.createElement('div');
@@ -465,6 +555,7 @@ function escHtml(str) {
 function escAttr(str) {
   return String(str).replace(/'/g, "\\'").replace(/"/g, '&quot;');
 }
+
 // ── STATS ─────────────────────────────────────────────────────
 function updateStats(subs) {
   const today = new Date().toDateString();
@@ -476,6 +567,7 @@ function updateStats(subs) {
   document.getElementById('stat-flagged').textContent = flaggedCount;
   document.getElementById('stat-refs').textContent = refs;
 }
+
 // ── FLAG (persisted to Supabase) ─────────────────────────────
 async function toggleFlag(id, newState) {
   if (!sbClient) return;
@@ -484,10 +576,13 @@ async function toggleFlag(id, newState) {
       .from('submissions')
       .update({ flagged: newState })
       .eq('id', id);
+
     if (error) throw error;
+
     // Update local state
     const sub = allSubmissions.find(s => s.id === id);
     if (sub) sub.flagged = newState;
+
     renderSubmissions(allSubmissions);
     updateStats(allSubmissions);
     showToast(newState ? '⚑ Submission flagged' : '✓ Flag removed', 'success');
@@ -495,16 +590,20 @@ async function toggleFlag(id, newState) {
     showToast('Failed to update flag: ' + e.message, 'error');
   }
 }
+
 // ── DELETE SUBMISSION ────────────────────────────────────────
 async function deleteSubmission(id) {
   if (!confirm('Delete this submission permanently? This cannot be undone.')) return;
   if (!sbClient) return;
+
   try {
     const { error } = await sbClient
       .from('submissions')
       .delete()
       .eq('id', id);
+
     if (error) throw error;
+
     allSubmissions = allSubmissions.filter(s => s.id !== id);
     renderSubmissions(allSubmissions);
     updateStats(allSubmissions);
@@ -513,6 +612,7 @@ async function deleteSubmission(id) {
     showToast('Failed to delete: ' + e.message, 'error');
   }
 }
+
 // ── LIGHTBOX ──────────────────────────────────────────────────
 function openLightbox(src) {
   document.getElementById('lightbox-img').src = src;
@@ -522,14 +622,17 @@ function closeLightbox() {
   document.getElementById('lightbox').classList.remove('open');
 }
 document.addEventListener('keydown', e => { if(e.key==='Escape') closeLightbox(); });
+
 // ── FILTERS ──────────────────────────────────────────────────
 document.getElementById('filter-search').addEventListener('input', () => renderSubmissions(allSubmissions));
 document.getElementById('filter-flagged').addEventListener('change', () => renderSubmissions(allSubmissions));
+
 // ── REFRESH ───────────────────────────────────────────────────
 document.getElementById('refresh-btn').addEventListener('click', () => {
   loadSubmissions();
   showToast('↻ Refreshing…');
 });
+
 // ── SETTINGS (re-open setup) ─────────────────────────────────
 document.getElementById('settings-btn').addEventListener('click', () => {
   // Pre-fill existing values
@@ -539,11 +642,13 @@ document.getElementById('settings-btn').addEventListener('click', () => {
   document.getElementById('supa-key-input').value = key;
   show('screen-setup');
 });
+
 // ── LOGOUT ────────────────────────────────────────────────────
 document.getElementById('logout-btn').addEventListener('click', () => {
   show('screen-login');
   document.getElementById('pw-input').value='';
 });
+
 // ── EXPORT CSV ───────────────────────────────────────────────
 document.getElementById('export-btn').addEventListener('click', () => {
   if (!allSubmissions.length) { alert('No submissions to export.'); return; }
@@ -570,6 +675,7 @@ document.getElementById('export-btn').addEventListener('click', () => {
   a.click();
   showToast('⬇ CSV exported', 'success');
 });
+
 // ── AUTO LOGIN CHECK ──────────────────────────────────────────
 // (Stay on login screen — always require password)
 </script>
