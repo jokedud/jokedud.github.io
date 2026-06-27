@@ -15,11 +15,9 @@
   }
   body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;}
   input,button,select{font-family:'Inter',sans-serif;}
-
   /* ── SCREENS ── */
   .screen{display:none;min-height:100vh;}
   .screen.active{display:flex;}
-
   /* ── LOGIN SCREEN ── */
   #screen-login{align-items:center;justify-content:center;padding:20px;}
   .login-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);width:100%;max-width:380px;overflow:hidden;}
@@ -37,10 +35,9 @@
   .btn-primary:hover{opacity:0.85;}
   .btn-primary:disabled{opacity:0.4;cursor:not-allowed;}
   .login-footer{padding:14px 24px;border-top:1px solid var(--border);font-size:0.72rem;color:var(--muted);text-align:center;}
-
   /* ── SETUP SCREEN ── */
   #screen-setup{flex-direction:column;align-items:center;justify-content:center;padding:20px;}
-  .setup-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);width:100%;max-width:480px;}
+  .setup-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);width:100%;max-width:520px;}
   .setup-header{padding:20px 24px;border-bottom:1px solid var(--border);}
   .setup-title{font-size:0.95rem;font-weight:700;margin-bottom:4px;}
   .setup-sub{font-size:0.78rem;color:var(--muted);}
@@ -49,7 +46,9 @@
   .setup-note strong{color:var(--accent);}
   .setup-note ol{margin:6px 0 0 16px;}
   .setup-note li{margin-bottom:3px;}
-
+  .setup-note code{background:var(--bg);padding:1px 5px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--green);}
+  .setup-sql{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--green);line-height:1.7;overflow-x:auto;white-space:pre;max-height:260px;overflow-y:auto;}
+  .setup-sql-toggle{font-size:0.78rem;color:var(--accent);cursor:pointer;border:none;background:none;font-family:'Inter',sans-serif;font-weight:600;padding:0;text-decoration:underline;}
   /* ── ADMIN SHELL ── */
   #screen-admin{flex-direction:column;}
   .admin-topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
@@ -62,22 +61,19 @@
   .btn-refresh{background:var(--accent);color:#fff;}
   .btn-logout{background:transparent;color:var(--muted);border:1px solid var(--border);}
   .btn-export{background:rgba(63,185,80,0.15);color:var(--green);border:1px solid rgba(63,185,80,0.3);}
-
+  .btn-settings{background:rgba(163,113,247,0.12);color:var(--purple);border:1px solid rgba(163,113,247,0.25);}
   /* ── STATS BAR ── */
   .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-bottom:1px solid var(--border);}
   .stat-cell{background:var(--surface);padding:14px 20px;}
   .stat-val{font-size:1.4rem;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text);}
   .stat-label{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px;}
-
   /* ── FILTERS ── */
   .filters-bar{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface2);}
   .filter-input{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:7px 11px;color:var(--text);font-size:0.8rem;outline:none;min-width:180px;}
   .filter-input:focus{border-color:var(--accent);}
   .filter-count{font-size:0.76rem;color:var(--muted);margin-left:auto;}
-
   /* ── SUBMISSIONS GRID ── */
   .submissions-area{padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;}
-
   /* ── SUBMISSION CARD ── */
   .sub-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;}
   .sub-photo{width:100%;height:180px;object-fit:cover;background:var(--bg);display:block;cursor:zoom-in;}
@@ -93,8 +89,9 @@
   .btn-dl:hover{background:rgba(31,111,235,0.22);}
   .btn-flag{padding:7px 10px;background:rgba(248,81,73,0.1);color:var(--red);border:1px solid rgba(248,81,73,0.25);border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;transition:background 0.15s;}
   .btn-flag:hover{background:rgba(248,81,73,0.2);}
+  .btn-delete{padding:7px 10px;background:rgba(210,153,34,0.1);color:var(--yellow);border:1px solid rgba(210,153,34,0.25);border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;transition:background 0.15s;}
+  .btn-delete:hover{background:rgba(210,153,34,0.2);}
   .flagged-badge{display:inline-block;background:rgba(248,81,73,0.15);color:var(--red);border:1px solid rgba(248,81,73,0.3);border-radius:4px;font-size:0.65rem;font-weight:700;padding:1px 6px;margin-left:6px;text-transform:uppercase;}
-
   /* ── EMPTY / LOADING / ERROR STATES ── */
   .state-box{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted);}
   .state-box svg{margin-bottom:12px;opacity:0.4;}
@@ -102,14 +99,17 @@
   .state-sub{font-size:0.8rem;line-height:1.6;}
   .spinner-lg{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 14px;}
   @keyframes spin{to{transform:rotate(360deg);}}
-
   /* ── LIGHTBOX ── */
   .lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:999;display:none;align-items:center;justify-content:center;padding:20px;cursor:zoom-out;}
   .lightbox.open{display:flex;}
   .lightbox img{max-width:100%;max-height:90vh;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,0.6);}
   .lightbox-close{position:absolute;top:16px;right:20px;color:#fff;font-size:1.8rem;cursor:pointer;opacity:0.7;line-height:1;}
   .lightbox-close:hover{opacity:1;}
-
+  /* ── TOAST NOTIFICATION ── */
+  .toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 18px;font-size:0.82rem;color:var(--text);z-index:1000;opacity:0;transform:translateY(12px);transition:all 0.3s ease;pointer-events:none;max-width:340px;box-shadow:0 8px 30px rgba(0,0,0,0.4);}
+  .toast.show{opacity:1;transform:translateY(0);pointer-events:auto;}
+  .toast.success{border-color:rgba(63,185,80,0.4);}
+  .toast.error{border-color:rgba(248,81,73,0.4);}
   @media(max-width:600px){
     .stats-bar{grid-template-columns:repeat(2,1fr);}
     .admin-topbar{flex-wrap:wrap;gap:8px;}
@@ -118,7 +118,6 @@
 </style>
 </head>
 <body>
-
 <!-- ══════════════════════════════════════════════════════════════
      SCREEN 1 — LOGIN
 ══════════════════════════════════════════════════════════════ -->
@@ -150,40 +149,102 @@
     <div class="login-footer">SecureVerify™ Admin · Evidence Management System</div>
   </div>
 </div>
-
 <!-- ══════════════════════════════════════════════════════════════
-     SCREEN 2 — NETLIFY SETUP
+     SCREEN 2 — SUPABASE SETUP
 ══════════════════════════════════════════════════════════════ -->
 <div class="screen" id="screen-setup">
   <div class="setup-card">
     <div class="setup-header">
-      <div class="setup-title">🔧 Netlify Connection Setup</div>
-      <div class="setup-sub">One-time configuration to connect to your Netlify form submissions.</div>
+      <div class="setup-title">🔧 Supabase Connection Setup</div>
+      <div class="setup-sub">One-time configuration to connect to your Supabase project.</div>
     </div>
     <div class="setup-body">
       <div class="setup-note">
         <strong>How to get your credentials:</strong>
         <ol>
-          <li>Log into <strong>app.netlify.com</strong></li>
-          <li><strong>Site ID:</strong> Go to Site Settings → General → Site Information → copy <em>Site ID</em></li>
-          <li><strong>Access Token:</strong> Click your avatar → User Settings → Applications → New Access Token</li>
+          <li>Log into <strong>supabase.com</strong> and open your project</li>
+          <li><strong>Project URL:</strong> Go to Settings → API → copy the <em>Project URL</em></li>
+          <li><strong>Anon Key:</strong> Same page → copy the <code>anon</code> <em>public</em> key</li>
           <li>Paste both below — they are saved only in your browser.</li>
         </ol>
       </div>
-      <div>
-        <div class="field-label">Netlify Site ID</div>
-        <input class="field-input" type="text" id="site-id-input" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"/>
+      <button class="setup-sql-toggle" id="toggle-sql" onclick="document.getElementById('sql-block').style.display=document.getElementById('sql-block').style.display==='none'?'block':'none'; this.textContent=document.getElementById('sql-block').style.display==='none'?'▶ Show required SQL setup':'▼ Hide SQL setup'">▶ Show required SQL setup</button>
+      <div id="sql-block" style="display:none;">
+        <div class="setup-note" style="margin-bottom:10px;">
+          Run this SQL in your Supabase <strong>SQL Editor</strong> (Dashboard → SQL Editor → New Query) to create the submissions table and storage bucket:
+        </div>
+        <div class="setup-sql">-- Create the submissions table
+CREATE TABLE IF NOT EXISTS submissions (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  ref_id TEXT,
+  task TEXT,
+  attempt INTEGER DEFAULT 1,
+  tos_agreed BOOLEAN DEFAULT false,
+  user_agent TEXT,
+  photo_url TEXT,
+  ip_address TEXT,
+  flagged BOOLEAN DEFAULT false,
+  notes TEXT,
+  submitted_at TIMESTAMPTZ DEFAULT now(),
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+-- Enable Row Level Security
+ALTER TABLE submissions ENABLE ROW LEVEL SECURITY;
+-- Policy: allow inserts from anon (for the public form)
+CREATE POLICY "Allow anonymous inserts"
+  ON submissions FOR INSERT
+  TO anon
+  WITH CHECK (true);
+-- Policy: allow full access for authenticated users (admin)
+CREATE POLICY "Allow authenticated full access"
+  ON submissions FOR ALL
+  TO authenticated
+  USING (true)
+  WITH CHECK (true);
+-- Policy: allow anon to read (for admin via anon key)
+CREATE POLICY "Allow anon read"
+  ON submissions FOR SELECT
+  TO anon
+  USING (true);
+-- Policy: allow anon to update (for flagging)
+CREATE POLICY "Allow anon update"
+  ON submissions FOR UPDATE
+  TO anon
+  USING (true)
+  WITH CHECK (true);
+-- Policy: allow anon to delete
+CREATE POLICY "Allow anon delete"
+  ON submissions FOR DELETE
+  TO anon
+  USING (true);
+-- Create storage bucket for evidence photos
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('evidence', 'evidence', true)
+ON CONFLICT (id) DO NOTHING;
+-- Allow public read access to evidence bucket
+CREATE POLICY "Public read evidence"
+  ON storage.objects FOR SELECT
+  TO public
+  USING (bucket_id = 'evidence');
+-- Allow anon uploads to evidence bucket
+CREATE POLICY "Anon upload evidence"
+  ON storage.objects FOR INSERT
+  TO anon
+  WITH CHECK (bucket_id = 'evidence');</div>
       </div>
       <div>
-        <div class="field-label">Netlify Personal Access Token</div>
-        <input class="field-input" type="password" id="token-input" placeholder="nfp_xxxxxxxxxxxxxxxxxxxxxxxx"/>
+        <div class="field-label">Supabase Project URL</div>
+        <input class="field-input" type="text" id="supa-url-input" placeholder="https://xxxxxxxxxxxxx.supabase.co"/>
       </div>
-      <div class="err-msg" id="setup-err">Could not connect. Check your Site ID and token.</div>
+      <div>
+        <div class="field-label">Supabase Anon (Public) Key</div>
+        <input class="field-input" type="password" id="supa-key-input" placeholder="eyJhbGciOiJIUzI1NiIs…"/>
+      </div>
+      <div class="err-msg" id="setup-err">Could not connect. Check your Project URL and anon key.</div>
       <button class="btn-primary" id="setup-btn">Connect &amp; Open Admin</button>
     </div>
   </div>
 </div>
-
 <!-- ══════════════════════════════════════════════════════════════
      SCREEN 3 — ADMIN DASHBOARD
 ══════════════════════════════════════════════════════════════ -->
@@ -197,17 +258,16 @@
     <div class="admin-right">
       <button class="btn-sm btn-export" id="export-btn">⬇ Export CSV</button>
       <button class="btn-sm btn-refresh" id="refresh-btn">↻ Refresh</button>
+      <button class="btn-sm btn-settings" id="settings-btn">⚙ Setup</button>
       <button class="btn-sm btn-logout" id="logout-btn">Sign Out</button>
     </div>
   </div>
-
   <div class="stats-bar">
     <div class="stat-cell"><div class="stat-val" id="stat-total">—</div><div class="stat-label">Total Submissions</div></div>
     <div class="stat-cell"><div class="stat-val" id="stat-today">—</div><div class="stat-label">Today</div></div>
     <div class="stat-cell"><div class="stat-val" id="stat-flagged">—</div><div class="stat-label">Flagged</div></div>
     <div class="stat-cell"><div class="stat-val" id="stat-refs">—</div><div class="stat-label">Unique Sessions</div></div>
   </div>
-
   <div class="filters-bar">
     <input class="filter-input" type="text" id="filter-search" placeholder="🔍  Search by ref, task, attempt…"/>
     <select class="filter-input" id="filter-flagged" style="width:auto;">
@@ -217,7 +277,6 @@
     </select>
     <span class="filter-count" id="filter-count"></span>
   </div>
-
   <div class="submissions-area" id="submissions-area">
     <div class="state-box">
       <div class="spinner-lg"></div>
@@ -225,37 +284,63 @@
     </div>
   </div>
 </div>
-
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
   <span class="lightbox-close" onclick="closeLightbox()">×</span>
   <img id="lightbox-img" src="" alt="Evidence photo"/>
 </div>
-
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+<!-- Supabase JS Client v2 (CDN) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 // ── PASSWORD UTILS (SHA-256 hash) ──────────────────────────────
 async function hashPw(pw) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
   return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
-
+// ── TOAST NOTIFICATION ─────────────────────────────────────────
+let toastTimer;
+function showToast(msg, type = '') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show ' + type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3500);
+}
 // ── STATE ──────────────────────────────────────────────────────
 let allSubmissions = [];
-let flagged = JSON.parse(localStorage.getItem('sv_flagged') || '{}');
-
+let supabase = null;
 function show(id) {
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
-
+// ── SUPABASE CLIENT INIT ──────────────────────────────────────
+function initSupabase() {
+  const url = localStorage.getItem('sv_supa_url');
+  const key = localStorage.getItem('sv_supa_key');
+  if (url && key) {
+    supabase = window.supabase.createClient(url, key);
+    return true;
+  }
+  return false;
+}
 // ── LOGIN ──────────────────────────────────────────────────────
 document.getElementById('login-btn').addEventListener('click', async () => {
   const pw = document.getElementById('pw-input').value;
   if (!pw) return;
   const stored = localStorage.getItem('sv_pw_hash');
-  if (!stored) { document.getElementById('login-err').style.display = 'block'; document.getElementById('login-err').textContent = 'No password set. Set one below first.'; return; }
+  if (!stored) {
+    document.getElementById('login-err').style.display = 'block';
+    document.getElementById('login-err').textContent = 'No password set. Set one below first.';
+    return;
+  }
   const hash = await hashPw(pw);
-  if (hash !== stored) { document.getElementById('login-err').style.display = 'block'; return; }
+  if (hash !== stored) {
+    document.getElementById('login-err').style.display = 'block';
+    document.getElementById('login-err').textContent = 'Incorrect password. Try again.';
+    return;
+  }
   document.getElementById('login-err').style.display = 'none';
   afterLogin();
 });
@@ -264,102 +349,104 @@ document.getElementById('setpw-btn').addEventListener('click', async () => {
   if (!pw || pw.length < 6) { alert('Password must be at least 6 characters.'); return; }
   localStorage.setItem('sv_pw_hash', await hashPw(pw));
   document.getElementById('pw-new').value = '';
-  alert('✅ Password set! You can now sign in.');
+  showToast('✅ Password set! You can now sign in.', 'success');
 });
-document.getElementById('pw-input').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('login-btn').click(); });
-
+document.getElementById('pw-input').addEventListener('keydown', e => {
+  if(e.key==='Enter') document.getElementById('login-btn').click();
+});
 function afterLogin() {
-  const siteId = localStorage.getItem('sv_site_id');
-  const token = localStorage.getItem('sv_token');
-  if (!siteId || !token) { show('screen-setup'); }
-  else { show('screen-admin'); loadSubmissions(); }
-}
-
-// ── SETUP ──────────────────────────────────────────────────────
-document.getElementById('setup-btn').addEventListener('click', async () => {
-  const siteId = document.getElementById('site-id-input').value.trim();
-  const token = document.getElementById('token-input').value.trim();
-  if (!siteId || !token) { alert('Both fields are required.'); return; }
-
-  document.getElementById('setup-btn').disabled = true;
-  document.getElementById('setup-btn').textContent = 'Connecting…';
-  document.getElementById('setup-err').style.display = 'none';
-
-  try {
-    const res = await fetch(`https://api.netlify.com/api/v1/sites/${siteId}/forms`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    if (!res.ok) throw new Error('Bad credentials');
-    localStorage.setItem('sv_site_id', siteId);
-    localStorage.setItem('sv_token', token);
+  if (initSupabase()) {
     show('screen-admin');
     loadSubmissions();
-  } catch {
+  } else {
+    show('screen-setup');
+  }
+}
+// ── SETUP ──────────────────────────────────────────────────────
+document.getElementById('setup-btn').addEventListener('click', async () => {
+  const url = document.getElementById('supa-url-input').value.trim();
+  const key = document.getElementById('supa-key-input').value.trim();
+  if (!url || !key) { alert('Both fields are required.'); return; }
+  const btn = document.getElementById('setup-btn');
+  btn.disabled = true;
+  btn.textContent = 'Connecting…';
+  document.getElementById('setup-err').style.display = 'none';
+  try {
+    // Test connection by querying the submissions table
+    const testClient = window.supabase.createClient(url, key);
+    const { data, error } = await testClient.from('submissions').select('id').limit(1);
+    if (error) {
+      // If the table doesn't exist yet, show a helpful message
+      if (error.message.includes('does not exist') || error.code === '42P01') {
+        document.getElementById('setup-err').style.display = 'block';
+        document.getElementById('setup-err').textContent = 'Connected to Supabase, but the "submissions" table was not found. Run the SQL setup first (click "Show required SQL setup" above).';
+        return;
+      }
+      throw error;
+    }
+    // Success — save credentials
+    localStorage.setItem('sv_supa_url', url);
+    localStorage.setItem('sv_supa_key', key);
+    initSupabase();
+    show('screen-admin');
+    loadSubmissions();
+    showToast('✅ Connected to Supabase successfully!', 'success');
+  } catch(e) {
     document.getElementById('setup-err').style.display = 'block';
+    document.getElementById('setup-err').textContent = `Could not connect: ${e.message || 'Check your Project URL and anon key.'}`;
   } finally {
-    document.getElementById('setup-btn').disabled = false;
-    document.getElementById('setup-btn').textContent = 'Connect & Open Admin';
+    btn.disabled = false;
+    btn.textContent = 'Connect & Open Admin';
   }
 });
-
 // ── LOAD SUBMISSIONS ──────────────────────────────────────────
 async function loadSubmissions() {
-  const siteId = localStorage.getItem('sv_site_id');
-  const token = localStorage.getItem('sv_token');
   const area = document.getElementById('submissions-area');
   area.innerHTML = `<div class="state-box"><div class="spinner-lg"></div><div class="state-title">Loading submissions…</div></div>`;
-
+  if (!supabase) {
+    area.innerHTML = `<div class="state-box">
+      <div class="state-title" style="color:var(--red)">Not connected</div>
+      <div class="state-sub">Supabase client not initialised. Go to Setup.</div>
+    </div>`;
+    return;
+  }
   try {
-    // Get form list
-    const formsRes = await fetch(`https://api.netlify.com/api/v1/sites/${siteId}/forms`, {
-      headers:{Authorization:`Bearer ${token}`}
-    });
-    const forms = await formsRes.json();
-    const form = forms.find(f => f.name === 'sv-submissions');
-
-    if (!form) {
+    const { data, error } = await supabase
+      .from('submissions')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(500);
+    if (error) throw error;
+    allSubmissions = data || [];
+    renderSubmissions(allSubmissions);
+    updateStats(allSubmissions);
+    if (allSubmissions.length === 0) {
       area.innerHTML = `<div class="state-box">
         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         <div class="state-title">No submissions yet</div>
-        <div class="state-sub">The form "sv-submissions" hasn't received any data yet.<br/>Share the portal link and wait for submissions to come in.</div>
+        <div class="state-sub">The submissions table is empty.<br/>Share the portal link and wait for evidence to come in.</div>
       </div>`;
-      updateStats([]);
-      return;
     }
-
-    // Get submissions (up to 100)
-    const subRes = await fetch(`https://api.netlify.com/api/v1/forms/${form.id}/submissions?per_page=100`, {
-      headers:{Authorization:`Bearer ${token}`}
-    });
-    allSubmissions = await subRes.json();
-    renderSubmissions(allSubmissions);
-    updateStats(allSubmissions);
   } catch(e) {
     area.innerHTML = `<div class="state-box">
       <div class="state-title" style="color:var(--red)">Failed to load</div>
-      <div class="state-sub">Check your Netlify credentials in Setup.<br/>${e.message}</div>
+      <div class="state-sub">Check your Supabase credentials in Setup.<br/>${e.message}</div>
     </div>`;
   }
 }
-
 // ── RENDER ────────────────────────────────────────────────────
 function renderSubmissions(subs) {
   const area = document.getElementById('submissions-area');
   const search = document.getElementById('filter-search').value.toLowerCase();
   const flagFilter = document.getElementById('filter-flagged').value;
-
   let filtered = subs.filter(s => {
-    const d = s.data || {};
-    const text = [d.ref_id,d.task,d.attempt,d.submitted_at].join(' ').toLowerCase();
+    const text = [s.ref_id, s.task, String(s.attempt), s.submitted_at, s.notes].join(' ').toLowerCase();
     if (search && !text.includes(search)) return false;
-    const isFlagged = !!flagged[s.id];
-    if (flagFilter === 'flagged' && !isFlagged) return false;
-    if (flagFilter === 'unflagged' && isFlagged) return false;
+    if (flagFilter === 'flagged' && !s.flagged) return false;
+    if (flagFilter === 'unflagged' && s.flagged) return false;
     return true;
   });
-
   document.getElementById('filter-count').textContent = `Showing ${filtered.length} of ${subs.length}`;
-
   if (!filtered.length) {
     area.innerHTML = `<div class="state-box">
       <div class="state-title">No matching submissions</div>
@@ -367,60 +454,96 @@ function renderSubmissions(subs) {
     </div>`;
     return;
   }
-
-  area.innerHTML = filtered.slice().reverse().map(s => {
-    const d = s.data || {};
-    const isFlagged = !!flagged[s.id];
-    const photoUrl = s.ordered_human_fields?.find(f=>f.name==='photo')?.value || null;
-    const date = d.submitted_at ? new Date(d.submitted_at).toLocaleString() : new Date(s.created_at).toLocaleString();
-
+  area.innerHTML = filtered.map(s => {
+    const photoUrl = s.photo_url || null;
+    const date = s.submitted_at
+      ? new Date(s.submitted_at).toLocaleString()
+      : new Date(s.created_at).toLocaleString();
     return `<div class="sub-card" id="card-${s.id}">
       ${photoUrl
-        ? `<img class="sub-photo" src="${photoUrl}" alt="Evidence" onclick="openLightbox('${photoUrl}')" loading="lazy"/>`
+        ? `<img class="sub-photo" src="${escHtml(photoUrl)}" alt="Evidence" onclick="openLightbox('${escAttr(photoUrl)}')" loading="lazy"/>`
         : `<div class="sub-photo-placeholder"><span>📷 No photo attached</span></div>`
       }
       <div class="sub-body">
-        <div class="sub-ref">${d.ref_id || 'Unknown Ref'} ${isFlagged ? '<span class="flagged-badge">⚑ Flagged</span>' : ''}</div>
-        <div class="sub-task">${(d.task||'Unknown task').substring(0,100)}${(d.task||'').length>100?'…':''}</div>
+        <div class="sub-ref">${escHtml(s.ref_id || 'Unknown Ref')} ${s.flagged ? '<span class="flagged-badge">⚑ Flagged</span>' : ''}</div>
+        <div class="sub-task">${escHtml((s.task||'Unknown task').substring(0,120))}${(s.task||'').length>120?'…':''}</div>
         <div class="sub-meta">
-          <div class="sub-meta-row"><span>Attempt</span><span>#${d.attempt||'?'}</span></div>
-          <div class="sub-meta-row"><span>ToS Agreed</span><span>${d.tos_agreed ? '✅ Yes' : '—'}</span></div>
+          <div class="sub-meta-row"><span>Attempt</span><span>#${s.attempt||'?'}</span></div>
+          <div class="sub-meta-row"><span>ToS Agreed</span><span>${s.tos_agreed ? '✅ Yes' : '—'}</span></div>
           <div class="sub-meta-row"><span>Submitted</span><span>${date}</span></div>
-          <div class="sub-meta-row"><span>Device</span><span style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${(d.user_agent||'Unknown').split(' ').slice(0,2).join(' ')}</span></div>
+          <div class="sub-meta-row"><span>IP Address</span><span>${escHtml(s.ip_address||'—')}</span></div>
+          <div class="sub-meta-row"><span>Device</span><span style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escHtml((s.user_agent||'Unknown').split(' ').slice(0,3).join(' '))}</span></div>
+          ${s.notes ? `<div class="sub-meta-row"><span>Notes</span><span style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escHtml(s.notes)}</span></div>` : ''}
         </div>
       </div>
       <div class="sub-actions">
-        ${photoUrl ? `<a class="btn-dl" href="${photoUrl}" download="evidence-${d.ref_id||s.id}.jpg" target="_blank">
+        ${photoUrl ? `<a class="btn-dl" href="${escAttr(photoUrl)}" download="evidence-${escAttr(s.ref_id||s.id)}.jpg" target="_blank">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Download
         </a>` : `<span class="btn-dl" style="opacity:0.4;cursor:default;">No photo</span>`}
-        <button class="btn-flag" onclick="toggleFlag('${s.id}')">${isFlagged ? '✓ Flagged' : '⚑ Flag'}</button>
+        <button class="btn-flag" onclick="toggleFlag('${s.id}', ${!s.flagged})">${s.flagged ? '✓ Flagged' : '⚑ Flag'}</button>
+        <button class="btn-delete" onclick="deleteSubmission('${s.id}')">🗑</button>
       </div>
     </div>`;
   }).join('');
 }
-
+// ── HTML ESCAPE UTILS ─────────────────────────────────────────
+function escHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+function escAttr(str) {
+  return String(str).replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
 // ── STATS ─────────────────────────────────────────────────────
 function updateStats(subs) {
   const today = new Date().toDateString();
   const todayCount = subs.filter(s => new Date(s.created_at).toDateString() === today).length;
-  const flaggedCount = subs.filter(s => !!flagged[s.id]).length;
-  const refs = new Set(subs.map(s=>s.data?.ref_id).filter(Boolean)).size;
+  const flaggedCount = subs.filter(s => s.flagged).length;
+  const refs = new Set(subs.map(s => s.ref_id).filter(Boolean)).size;
   document.getElementById('stat-total').textContent = subs.length;
   document.getElementById('stat-today').textContent = todayCount;
   document.getElementById('stat-flagged').textContent = flaggedCount;
   document.getElementById('stat-refs').textContent = refs;
 }
-
-// ── FLAG ──────────────────────────────────────────────────────
-function toggleFlag(id) {
-  if (flagged[id]) delete flagged[id];
-  else flagged[id] = true;
-  localStorage.setItem('sv_flagged', JSON.stringify(flagged));
-  renderSubmissions(allSubmissions);
-  updateStats(allSubmissions);
+// ── FLAG (persisted to Supabase) ─────────────────────────────
+async function toggleFlag(id, newState) {
+  if (!supabase) return;
+  try {
+    const { error } = await supabase
+      .from('submissions')
+      .update({ flagged: newState })
+      .eq('id', id);
+    if (error) throw error;
+    // Update local state
+    const sub = allSubmissions.find(s => s.id === id);
+    if (sub) sub.flagged = newState;
+    renderSubmissions(allSubmissions);
+    updateStats(allSubmissions);
+    showToast(newState ? '⚑ Submission flagged' : '✓ Flag removed', 'success');
+  } catch(e) {
+    showToast('Failed to update flag: ' + e.message, 'error');
+  }
 }
-
+// ── DELETE SUBMISSION ────────────────────────────────────────
+async function deleteSubmission(id) {
+  if (!confirm('Delete this submission permanently? This cannot be undone.')) return;
+  if (!supabase) return;
+  try {
+    const { error } = await supabase
+      .from('submissions')
+      .delete()
+      .eq('id', id);
+    if (error) throw error;
+    allSubmissions = allSubmissions.filter(s => s.id !== id);
+    renderSubmissions(allSubmissions);
+    updateStats(allSubmissions);
+    showToast('🗑 Submission deleted', 'success');
+  } catch(e) {
+    showToast('Failed to delete: ' + e.message, 'error');
+  }
+}
 // ── LIGHTBOX ──────────────────────────────────────────────────
 function openLightbox(src) {
   document.getElementById('lightbox-img').src = src;
@@ -430,36 +553,54 @@ function closeLightbox() {
   document.getElementById('lightbox').classList.remove('open');
 }
 document.addEventListener('keydown', e => { if(e.key==='Escape') closeLightbox(); });
-
 // ── FILTERS ──────────────────────────────────────────────────
 document.getElementById('filter-search').addEventListener('input', () => renderSubmissions(allSubmissions));
 document.getElementById('filter-flagged').addEventListener('change', () => renderSubmissions(allSubmissions));
-
 // ── REFRESH ───────────────────────────────────────────────────
-document.getElementById('refresh-btn').addEventListener('click', loadSubmissions);
-
+document.getElementById('refresh-btn').addEventListener('click', () => {
+  loadSubmissions();
+  showToast('↻ Refreshing…');
+});
+// ── SETTINGS (re-open setup) ─────────────────────────────────
+document.getElementById('settings-btn').addEventListener('click', () => {
+  // Pre-fill existing values
+  const url = localStorage.getItem('sv_supa_url') || '';
+  const key = localStorage.getItem('sv_supa_key') || '';
+  document.getElementById('supa-url-input').value = url;
+  document.getElementById('supa-key-input').value = key;
+  show('screen-setup');
+});
 // ── LOGOUT ────────────────────────────────────────────────────
-document.getElementById('logout-btn').addEventListener('click', () => { show('screen-login'); document.getElementById('pw-input').value=''; });
-
+document.getElementById('logout-btn').addEventListener('click', () => {
+  show('screen-login');
+  document.getElementById('pw-input').value='';
+});
 // ── EXPORT CSV ───────────────────────────────────────────────
 document.getElementById('export-btn').addEventListener('click', () => {
   if (!allSubmissions.length) { alert('No submissions to export.'); return; }
-  const rows = [['Ref ID','Attempt','Task','Submitted At','ToS Agreed','User Agent','Flagged']];
+  const rows = [['ID','Ref ID','Attempt','Task','Submitted At','ToS Agreed','User Agent','IP Address','Photo URL','Flagged','Notes']];
   allSubmissions.forEach(s => {
-    const d = s.data || {};
     rows.push([
-      d.ref_id||'', d.attempt||'', (d.task||'').replace(/,/g,';'),
-      d.submitted_at||s.created_at, d.tos_agreed||'', (d.user_agent||'').replace(/,/g,';'),
-      flagged[s.id]?'YES':'NO'
+      s.id || '',
+      s.ref_id || '',
+      s.attempt || '',
+      (s.task || '').replace(/,/g, ';'),
+      s.submitted_at || s.created_at,
+      s.tos_agreed ? 'YES' : 'NO',
+      (s.user_agent || '').replace(/,/g, ';'),
+      s.ip_address || '',
+      s.photo_url || '',
+      s.flagged ? 'YES' : 'NO',
+      (s.notes || '').replace(/,/g, ';')
     ]);
   });
-  const csv = rows.map(r=>r.map(v=>`"${v}"`).join(',')).join('\n');
+  const csv = rows.map(r => r.map(v => `"${v}"`).join(',')).join('\n');
   const a = document.createElement('a');
   a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
   a.download = `secureverify-evidence-${new Date().toISOString().slice(0,10)}.csv`;
   a.click();
+  showToast('⬇ CSV exported', 'success');
 });
-
 // ── AUTO LOGIN CHECK ──────────────────────────────────────────
 // (Stay on login screen — always require password)
 </script>
