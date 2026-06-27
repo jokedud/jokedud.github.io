@@ -291,7 +291,10 @@ uploadZone.addEventListener('drop', e => {
   if (e.dataTransfer.files[0]) { fileInput.files = e.dataTransfer.files; fileInput.dispatchEvent(new Event('change')); }
 });
 async function saveToSupabase(file) {
-  if (!sb) return;
+  if (!sb) {
+    console.error("Supabase client is not initialized. Make sure credentials are set.");
+    return;
+  }
   try {
     let photoUrl = null;
     if (file) {
@@ -300,6 +303,11 @@ async function saveToSupabase(file) {
       const { data: uploadData, error: uploadErr } = await sb.storage
         .from('evidence')
         .upload(fileName, file, { contentType: file.type, upsert: false });
+      
+      if (uploadErr) {
+        console.error("Supabase Storage Upload Error:", uploadErr);
+      }
+      
       if (!uploadErr && uploadData) {
         const { data: urlData } = sb.storage.from('evidence').getPublicUrl(uploadData.path);
         photoUrl = urlData?.publicUrl || null;
@@ -316,7 +324,7 @@ async function saveToSupabase(file) {
     } catch (e) {
       // Fail silently if adblocker blocks the IP API request
     }
-    await sb.from('submissions').insert({
+    const { error: insertErr } = await sb.from('submissions').insert({
       ref_id: refId,
       task: TASKS[taskIndex].label + ': ' + TASKS[taskIndex].text.replace(/<[^>]+>/g, ''),
       attempt: attempt,
@@ -327,7 +335,14 @@ async function saveToSupabase(file) {
       ip_address: ipAddress, // Save the IP Address
       submitted_at: new Date().toISOString(),
     });
-  } catch(_) {}
+    if (insertErr) {
+      console.error("Supabase Insert Table Error:", insertErr);
+    } else {
+      console.log("Successfully logged submission to Supabase!");
+    }
+  } catch(err) {
+    console.error("General saveToSupabase Error:", err);
+  }
 }
 // ── SUBMIT ────────────────────────────────────────────────────
 submitBtn.addEventListener('click', async () => {
